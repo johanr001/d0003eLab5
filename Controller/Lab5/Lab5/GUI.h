@@ -2,7 +2,6 @@
 #define GUI_H_
 
 #include "TinyTimber.h"
-#include "pulsegen.h"
 
 typedef struct {
 	Object super;
