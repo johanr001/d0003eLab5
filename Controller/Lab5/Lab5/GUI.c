@@ -67,6 +67,7 @@ void printAt(long num, int pos) {
 	
 }
 
+
 void printNorth(GUI *self, int arg) {
 	printAt(arg, 4);
 }
@@ -76,3 +77,8 @@ void printSouth(GUI *self, int arg) {
 void printBridge(GUI *self, int arg) {
 	printAt(arg, 2);
 }
+
+void updateDisplay(GUI *self, int arg){
+	// fixa sen
+}
+

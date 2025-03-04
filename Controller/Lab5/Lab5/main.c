@@ -1,11 +1,13 @@
 #include "TinyTimber.h"
 #include "GUI.h"
-
+#include "SerialCom.h"
+#include "interruptHandler.h"
 
 // Skapar GUI-objektet.
 GUI gui = initGUI();
 
-
+SerialCom serial = initSerialCom();
+Interrupthandler interrupt = initInterruptHandler();
 
 
 int main(void) {
@@ -15,10 +17,9 @@ int main(void) {
 	// Initiera LCD innan vi börjar skriva ut.
 	lcd_init();
 
-	// Installera knappobjektet som interrupthandler för PCINT0 och PCINT1.
+	// Installera USART som interrupthandler.
 
-	INSTALL(&interrupt, horizontal, IRQ_PCINT0);
-	INSTALL(&interrupt, vertandcent, IRQ_PCINT1);
+	INSTALL(&interrupt, interruptreceiver, IRQ_USART0_RX);
 
 	// TINYTIMBER startar kernel. Vi anropar startProgram på gui som första metod.
 	return TINYTIMBER(&gui, startProgram, 0);

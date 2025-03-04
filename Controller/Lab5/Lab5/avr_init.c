@@ -13,7 +13,8 @@ void avr_init(){
 	TIMSK1 |= (1 << OCIE1A);
 	OCR1A=194; //f_oCnA = (f_clk_I/O)/(2*N*(1+OCRnA) 194 eller 3905 för en sekund
 	
-	
+	UBRR0H
+	UBRR0L
 	
 	
 	
