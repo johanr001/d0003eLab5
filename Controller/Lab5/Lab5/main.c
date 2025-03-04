@@ -1,18 +1,25 @@
-/*
- * Lab5.c
- *
- * Created: 03/03/2025 13:44:34
- * Author : johan_csf2sgl
- */ 
-
-#include <avr/io.h>
+#include "TinyTimber.h"
+#include "GUI.h"
 
 
-int main(void)
-{
-    /* Replace with your application code */
-    while (1) 
-    {
-    }
+// Skapar GUI-objektet.
+GUI gui = initGUI();
+
+
+
+
+int main(void) {
+	// Initiera timer/klocka via avr_init().
+	avr_init();
+	
+	// Initiera LCD innan vi börjar skriva ut.
+	lcd_init();
+
+	// Installera knappobjektet som interrupthandler för PCINT0 och PCINT1.
+
+	INSTALL(&interrupt, horizontal, IRQ_PCINT0);
+	INSTALL(&interrupt, vertandcent, IRQ_PCINT1);
+
+	// TINYTIMBER startar kernel. Vi anropar startProgram på gui som första metod.
+	return TINYTIMBER(&gui, startProgram, 0);
 }
-
