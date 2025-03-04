@@ -1,7 +1,5 @@
 #include "GUI.h"
 #include "TinyTimber.h"
-#include <avr/io.h>
-#include <stdint.h>
 
 // font[] innehåller bitmönster för siffrorna 0-9 på LCD:n.
 // Varje siffra representeras som ett 16-bitars värde.

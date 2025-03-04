@@ -2,6 +2,8 @@
 #define GUI_H_
 
 #include "TinyTimber.h"
+#include <avr/io.h>
+#include <stdint.h>
 
 typedef struct {
 	Object super;
@@ -10,6 +12,7 @@ typedef struct {
 
 #define initGUI() { initObject()}
 	
+void updateDisplay(GUI *self, int arg);
 
 void printNorth(GUI *self, int arg);
 void PrintSouth(GUI *self, int arg);
