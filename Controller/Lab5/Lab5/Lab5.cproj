@@ -120,7 +120,31 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="LCD.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="LCD.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="main.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial_in.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial_in.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial_out.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial_out.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TinyTimber.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="TinyTimber.h">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
