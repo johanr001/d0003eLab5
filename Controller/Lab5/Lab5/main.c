@@ -10,6 +10,15 @@ SerialCom serial = initSerialCom();
 Interrupthandler interrupt = initInterruptHandler();
 
 
+// startProgram() körs vid uppstart. Uppdatera bara displayen.
+int startProgram(GUI *self) {
+
+	// Uppdatera displayen omedelbart så vi ser initialfrekvenser (0).
+	ASYNC(self, updateDisplay, 0);
+
+	return 0;
+}
+
 int main(void) {
 	// Initiera timer/klocka via avr_init().
 	avr_init();
