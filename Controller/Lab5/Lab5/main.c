@@ -1,3 +1,5 @@
+// MAIN FIL FÖR CONTROLLER
+
 #include "TinyTimber.h"
 #include "GUI.h"
 #include "SerialCom.h"
