@@ -29,8 +29,6 @@ int LampController(Controller *self, int arg){
 		
 	}
 	
-	
-	
 	// Om mer än x bilar har kommit från SOUTH (Checka om northbound bridge entry sensor var sist och BridgePassedSameDir)
 	// och det finns bilar i NorthQUEUE, sätt SOUTH till röd och NORTH till grön. Resetta också hur många som har passed.
 	
@@ -41,8 +39,6 @@ int LampController(Controller *self, int arg){
 		
 	}
 
-
-	
 	// Om det inte finns några bilar alls. Sätt båda NORTH och SOUTH till röd.
 	
 	if ((self->NorthQueue == 0) && (self->SouthQueue == 0)) {
@@ -61,10 +57,11 @@ int LampController(Controller *self, int arg){
 		ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHGREEN);
 	}
 	
-	
 	// Om det finns bilar i båda köerna
-	// TODO: Har ingen aning för denna logik.
-	if (){
+	if ((self->SouthQueue > 0) && (self->NorthQueue > 0)){
+		if (lastQueueSensor){ //Om sista var north så var south först, låt south gå.
+			ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHGREEN);
+		}
 	}
 	
 }

@@ -14,6 +14,7 @@ typedef struct {
 	unsigned char LightStatus; // Bitsen för vilka lampor
 	uint64_t BridgePassedSameDir; // Resetta och checka hur många bilar som passerat bridge, för starvation. 
 	bool lastBridgeDir; // Om 1 var north den bridge arrival, om 0 var south den sista på bridge.
+	bool lastQueueSensor; // Sista hållet sensorn var från bil kön. 1 för north och 0 för south.
 	} Controller;
 
 #define initController(gui) { initObject(), gui, 0, 0, 0 }
