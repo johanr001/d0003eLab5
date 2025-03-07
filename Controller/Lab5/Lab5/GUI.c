@@ -68,17 +68,13 @@ void printAt(long num, int pos) {
 }
 
 
-void printNorth(GUI *self, int arg) {
-	printAt(arg, 4);
-}
-void printSouth(GUI *self, int arg) {
-	printAt(arg, 0);
-}
-void printBridge(GUI *self, int arg) {
-	printAt(arg, 2);
-}
+int updateDisplay(GUI *self, int arg) {
+	printAt((SYNC(self->controller, getNorthQueue, 0)), 0);
+	
+	printAt((SYNC(self->controller, getBridgeQueue, 0)), 2);
+	
+	printAt((SYNC(self->controlles, getSouthQueue, 0)), 4);
 
-void updateDisplay(GUI *self, int arg){
-	// fixa sen
+	return 0;
 }
 

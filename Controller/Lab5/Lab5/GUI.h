@@ -4,19 +4,17 @@
 #include "TinyTimber.h"
 #include <avr/io.h>
 #include <stdint.h>
+#include "Controller.h"
 
 typedef struct {
 	Object super;
+	Controller *controller;
 } GUI;
 
 
-#define initGUI() { initObject()}
+#define initGUI(controller) { initObject(), controller}
 	
 void updateDisplay(GUI *self, int arg);
-
-void printNorth(GUI *self, int arg);
-void PrintSouth(GUI *self, int arg);
-void PrintBridge(GUI *self, int arg);
 
 void lcd_init(void);
 void writeChar(char ch, int pos);

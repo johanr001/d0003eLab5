@@ -9,7 +9,7 @@
 GUI gui = initGUI();
 
 SerialCom serial = initSerialCom();
-Interrupthandler interrupt = initInterruptHandler();
+Interrupthandler interruptreceiver = initInterruptHandler();
 
 
 // startProgram() körs vid uppstart. Uppdatera bara displayen.

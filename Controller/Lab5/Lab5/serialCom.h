@@ -11,6 +11,7 @@ typedef struct {
 
 #define initSerialCom() { initObject()}
 	
-void USARTreceiver(SerialCom *self, int arg);
+int USARTreceiver(SerialCom *self, int arg);
+int signalOut(SerialCom *self, int arg)
 
 #endif /* SERIALCOM_H_ */
