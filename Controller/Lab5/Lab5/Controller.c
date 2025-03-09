@@ -1,67 +1,136 @@
 #include "Controller.h"
 
-int getNorthQueue(Controller *self, int arg){
-	return self->NorthQueue
+// carLeavesBridge: AFTER 5 sekunder efter att en bil kör in.
+static int carLeavesBridge(Controller *self, int arg) {
+	// Minskar antalet bilar på bron om det är minst 1
+	if (self->BridgeAmount > 0) {
+		self->BridgeAmount--;
+	}
+	// Anropa trafficLightController för att uppdatera ljusen igen efter att bilen har lämnat
+	ASYNC(self, trafficLightController, 0);
+	return 0;
 }
 
-int getSouthQueue(Controller *self, int arg){
-	return self->SouthQueue
-	
+// afterRedGap: kort period med rött ljus på båda sidor efter att en bil har kört in
+static int afterRedGap(Controller *self, int arg) {
+	// Anropa trafficLightController igen för att bestämma vilka lampor som ska lysa
+	ASYNC(self, trafficLightController, 0);
+	return 0;
 }
 
-int getBridgeAmount(Controller *self, int arg){
-	return self->BridgeAmount
-	
-}
-
-
-
-int LampController(Controller *self, int arg){
-	
-	
-	// Om mer Ã¤n x bilar har kommit frÃ¥n NORTH (Checka om northbound bridge entry sensor var sist och BridgePassedSameDir)
-	// och det finns bilar i SouthQUEUE, sÃ¤tt NORTH till rÃ¶d och SOUTH till grÃ¶n. Resetta ocksÃ¥ hur mÃ¥nga som har passed.
-	
-	// Mer Ã¤n 10 bilar har passerat, south Ã¤r inte tom, och den sista bilen Ã¶ver bron kom frÃ¥n NORTH.
-	if(self->BridgePassedSameDir > maxStarvation) && (self->SouthQueue > 0) && (self->lastBridgeDir == 1) {
-		ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHRED); // Stoppa fÃ¶rst trafiken.
-		AFTER(MSEC(BRIDGETIME),self->SerialCom, signalOut, NORTHREDSOUTHGREEN); // Sedan nÃ¤r alla bilar Ã¤r Ã¶ver lÃ¥t south gÃ¥.
-		
-	}
-	
-	// Om mer Ã¤n x bilar har kommit frÃ¥n SOUTH (Checka om northbound bridge entry sensor var sist och BridgePassedSameDir)
-	// och det finns bilar i NorthQUEUE, sÃ¤tt SOUTH till rÃ¶d och NORTH till grÃ¶n. Resetta ocksÃ¥ hur mÃ¥nga som har passed.
-	
-	// Mer Ã¤n 10 bilar har passerat, north Ã¤r inte tom, och den sista bilen kom Ã¶ver bron kom frÃ¥n SOUTH.
-	if(self->BridgePassedSameDir > maxStarvation) && (self->NorthQueue > 0) && (self->lastBridgeDir == 0) {
-		ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHRED); // Stoppa fÃ¶rst trafiken.
-		AFTER(MSEC(BRIDGETIME),self->SerialCom, signalOut, NORTHGREENSOUTHRED); // Sedan nÃ¤r alla bilar Ã¤r Ã¶ver lÃ¥t north gÃ¥.
-		
+// trafficLightController: Bestämmer vilken sida som blir grön/röd utifrån aktuell kö och hur många bilar som finns på bron.
+void trafficLightController(Controller *self, int arg)
+{
+	// Om det redan är bilar på bron och vi precis forcade rött, vänta på afterRedGap
+	if (self->BridgeAmount > 0) {
+		// Om vi är i "all-red gap", så avvaktar vi tills afterRedGap kallar funktionen
+		// Om det redan är grönt, gör inget
+		return;
 	}
 
-	// Om det inte finns nÃ¥gra bilar alls. SÃ¤tt bÃ¥da NORTH och SOUTH till rÃ¶d.
-	
-	if ((self->NorthQueue == 0) && (self->SouthQueue == 0)) {
-		ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHRED);
+	unsigned long NQ = self->NorthQueue;
+	unsigned long SQ = self->SouthQueue;
+	unsigned char newLights = NORTHRED_SOUTHRED;  // Standard: rött för båda
+
+	// Inga bilar i någon kö -> båda röda
+	if (NQ == 0 && SQ == 0) {
+		newLights = NORTHRED_SOUTHRED;
 	}
-	
-	// Om det bara finns bilar pÃ¥ NORTH, sÃ¤tt SOUTH till rÃ¶d och NORTH till grÃ¶n.
-	
-	if ((self->NorthQueue > 0) && (self->SouthQueue == 0)) {
-		ASYNC(self->SerialCom, USARTtransmit, NORTHGREENSOUTHRED);
+	// Endast bilar i norr
+	else if (NQ > 0 && SQ == 0) {
+		newLights = NORTHGREEN_SOUTHRED;
 	}
-	
-	// Om det bara finns bilar pÃ¥ SOUTH, sÃ¤tt NORTH till rÃ¶d, och SOUTH till grÃ¶n.
-	
-	if ((self->SouthQueue > 0) && (self->NorthQueue == 0)) {
-		ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHGREEN);
+	// Endast bilar i söder
+	else if (SQ > 0 && NQ == 0) {
+		newLights = NORTHRED_SOUTHGREEN;
 	}
-	
-	// Om det finns bilar i bÃ¥da kÃ¶erna
-	if ((self->SouthQueue > 0) && (self->NorthQueue > 0)){
-		if (lastQueueSensor){ //Om sista var north sÃ¥ var south fÃ¶rst, lÃ¥t south gÃ¥.
-			ASYNC(self->SerialCom, USARTtransmit, NORTHREDSOUTHGREEN);
+	// Båda sidor har bilar i kö
+	else {
+		// Enkel logik: välj den senaste "queue sensor" (north eller south)
+		if (self->lastQueueSensor) {
+			// Senaste ankomst från northsound
+			newLights = NORTHGREEN_SOUTHRED;
+			} else {
+			// Senaste ankomst från southbound
+			newLights = NORTHRED_SOUTHGREEN;
 		}
 	}
-	
+
+	// Om de nya lampinställningarna skiljer sig, uppdatera och skicka via seriell
+	if (newLights != self->LightStatus) {
+		self->LightStatus = newLights;
+		ASYNC(self->serialCom, USARTtransmit, newLights);
+	}
+}
+
+// bitParser: Hanterar inkommande bitar  (arrival och entry)
+void bitParser(Controller *self, int arg)
+{
+
+
+	// HANTERA ANKOMSTER
+	if ((arg & NORTH_ARRIVAL) == NORTH_ARRIVAL) {
+		self->NorthQueue++;
+		self->lastQueueSensor = true;  // Senaste kön var från northbound.
+	}
+	if ((arg & SOUTH_ARRIVAL) == SOUTH_ARRIVAL) {
+		self->SouthQueue++;
+		self->lastQueueSensor = false; // Senaste kön var från southbound.
+	}
+
+	// Hantera entries.
+	if ((arg & NORTH_ENTRY) == NORTH_ENTRY) {
+		// Kolla om north ljuset är grönt
+		if (self->LightStatus & NORTH_GREEN) {
+			if (self->NorthQueue > 0) {
+				self->NorthQueue--;
+			}
+			self->BridgeAmount++;
+			// Planera att bilen lämnar bron efter 5 sek
+			AFTER(MSEC(BRIDGE_TIME_MS), self, carLeavesBridge, 1);
+
+			// Sätt båda sidor till rött direkt när bilen gått in
+			self->LightStatus = NORTHRED_SOUTHRED;
+			ASYNC(self->serialCom, USARTtransmit, NORTHRED_SOUTHRED);
+
+			// Efter en kort bara rött period, anropas afterRedGap
+			AFTER(MSEC(ALL_RED_GAP_MS), self, afterRedGap, 0);
+		}
+	}
+
+	if ((arg & SOUTH_ENTRY) == SOUTH_ENTRY) {
+		// Kolla om det south ljuset är grönt
+		if (self->LightStatus & SOUTH_GREEN) {
+			if (self->SouthQueue > 0) {
+				self->SouthQueue--;
+			}
+			self->BridgeAmount++;
+			// Planera att bilen lämnar bron efter 5 sek
+			AFTER(MSEC(BRIDGE_TIME_MS), self, carLeavesBridge, 0);
+
+			// Sätt båda sidor till rött när bilen precis gått in
+			self->LightStatus = NORTHRED_SOUTHRED;
+			ASYNC(self->serialCom, USARTtransmit, NORTHRED_SOUTHRED);
+
+			// Efter en kort bara rött period, anropas afterRedGap
+			AFTER(MSEC(ALL_RED_GAP_MS), self, afterRedGap, 0);
+		}
+	}
+
+	// Anropa trafficLightController ifall nya bilar i kö ändrar logiken
+	ASYNC(self, trafficLightController, 0);
+}
+
+
+
+int getNorthQueue(Controller *self, int unused) {
+	return self->NorthQueue;
+}
+
+int getSouthQueue(Controller *self, int unused) {
+	return self->SouthQueue;
+}
+
+int getBridgeAmount(Controller *self, int unused) {
+	return self->BridgeAmount;
 }

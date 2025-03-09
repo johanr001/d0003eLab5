@@ -1,5 +1,4 @@
 #include "GUI.h"
-#include "TinyTimber.h"
 
 // font[] innehåller bitmönster för siffrorna 0-9 på LCD:n.
 // Varje siffra representeras som ett 16-bitars värde.
@@ -15,8 +14,6 @@ const uint16_t font[] = {
 	0x1F51, // 8
 	0x1B51  // 9
 };
-
-
 
 // Starta LCD
 void lcd_init() {
@@ -67,14 +64,20 @@ void printAt(long num, int pos) {
 	
 }
 
-
+// updateDisplay: Hämtar värden för NorthQueue, BridgeAmount, SouthQueue och skriver på LCD
 int updateDisplay(GUI *self, int arg) {
-	printAt((SYNC(self->controller, getNorthQueue, 0)), 0);
-	
-	printAt((SYNC(self->controller, getBridgeQueue, 0)), 2);
-	
-	printAt((SYNC(self->controlles, getSouthQueue, 0)), 4);
-
+	printAt(SYNC(self->controller, getNorthQueue, 0), 0);
+	printAt(SYNC(self->controller, getBridgeAmount, 0), 2);
+	printAt(SYNC(self->controller, getSouthQueue, 0), 4);
 	return 0;
 }
 
+// periodicUpdate: uppdaterar displayen och schemalägger sig själv igen
+int periodicUpdate(GUI *self, int arg) {
+	// Uppdatera displayen omedelbart
+	ASYNC(self, updateDisplay, 0);
+
+	// Schemalägg nästa uppdatering efter 500 ms
+	AFTER(MSEC(500), self, periodicUpdate, 0);
+	return 0;
+}

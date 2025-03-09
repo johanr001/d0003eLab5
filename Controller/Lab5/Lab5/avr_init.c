@@ -1,8 +1,5 @@
 #include "avr_init.h"
-#include <avr/io.h>
-#define FOSC 8000000// Clock Speed
-#define BAUD 9600
-#define MYUBRR FOSC/16/BAUD-1
+
 
 // avr_init() initierar klockan, timer1, prescalers etc.
 void avr_init(){
@@ -22,7 +19,5 @@ void avr_init(){
 	// Reciever, transmitter, och interrupt.
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
 	// 8 Data, 1 stop bit
-	UCSR0C |= (1 << UCSZ01) | (3 << UCSZ00);
-	
-	
-};
+    UCSR0C = (0 << USBS0) | (1 << UCSZ01) | (1 << UCSZ00);
+}

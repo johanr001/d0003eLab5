@@ -2,18 +2,16 @@
 #define INTERRUPTHANDLER_H_
 
 #include "TinyTimber.h"
-#include "serialCom.h"
+#include "Controller.h"
+#include <avr/io.h>
 
-typedef struct{
-
-	Object super;
-
-	SerialCom *serialCom;	
-	
+typedef struct {
+	Object     super;
+	Controller *controller;
 } Interrupthandler;
 
-#define initInterruptHandler(serialCom) { initObject(), serialCom}
+#define initInterruptHandler(controller) { initObject(), controller }
 
-void interruptreceiver(Interrupthandler *self, int arg);
+int interruptreceiver(Interrupthandler *self, int arg);
 
 #endif /* INTERRUPTHANDLER_H_ */

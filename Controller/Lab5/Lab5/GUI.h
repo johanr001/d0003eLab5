@@ -2,19 +2,19 @@
 #define GUI_H_
 
 #include "TinyTimber.h"
+#include "Controller.h"
 #include <avr/io.h>
 #include <stdint.h>
-#include "Controller.h"
 
 typedef struct {
-	Object super;
+	Object     super;
 	Controller *controller;
 } GUI;
 
+#define initGUI(controller) { initObject(), controller }
 
-#define initGUI(controller) { initObject(), controller}
-	
-void updateDisplay(GUI *self, int arg);
+int updateDisplay(GUI *self, int arg);
+int periodicUpdate(GUI *self, int arg);
 
 void lcd_init(void);
 void writeChar(char ch, int pos);

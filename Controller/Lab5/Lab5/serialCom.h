@@ -8,10 +8,8 @@ typedef struct {
 	Object super;
 } SerialCom;
 
+#define initSerialCom() { initObject() }
 
-#define initSerialCom() { initObject()}
-	
-int USARTreceiver(SerialCom *self, int arg);
-int signalOut(SerialCom *self, int arg)
+int USARTtransmit(SerialCom *self, int arg);
 
 #endif /* SERIALCOM_H_ */
