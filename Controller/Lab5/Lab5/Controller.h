@@ -26,20 +26,18 @@
 
 #define MAX_PASS_SAME_SIDE 4 // Starvation gräns.
 
-// Controller-struktur som håller reda på köer, broläge, lampstatus och referens till SerialCom
 typedef struct {
 	Object     super;
 	SerialCom *serialCom;
-	unsigned long NorthQueue; // Hur många bilar finns i NorthQueue?
-	unsigned long SouthQueue; // Hur många bilar finns i SouthQueue?
-	unsigned long BridgeAmount; // Hur många bilar finns på bron just nu?
-	unsigned char LightStatus; // Bitsen för vilka lampor
+	unsigned long NorthQueue; // Antalet bilar som finns i NorthBound kön.
+	unsigned long SouthQueue; // Antalet bilar som finns i SouthBound kön.
+	unsigned long BridgeAmount; // Antalet bilar på bron just nu.
+	unsigned char LightStatus; // Bitsen för vilka lampbits som är aktiverade.
 	unsigned long BridgePassedSameDir; // Resetta och checka hur många bilar som passerat bridge, för starvation.
 	bool lastBridgeDir; // Om 1 var northbound den bridge arrival, om 0 var southbound den sista på bridge.
 	bool lastQueueSensor; // Sista hållet sensorn var från bil kön. 1 för north och 0 för south.
 } Controller;
 
-// Konstruktor-makro för att initiera Controller
 #define initController(s) { initObject(), s, 0, 0, 0, NORTHRED_SOUTHRED, 0, 0, 0 }
 
 void bitParser(Controller *self, int arg);

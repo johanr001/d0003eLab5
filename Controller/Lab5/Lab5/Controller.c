@@ -1,5 +1,8 @@
 #include "Controller.h"
 
+// TODO: FIXA LOGIKEN FÖR TRAFFICLIGHTCONTROLLER OCH BITPARSERN.
+
+
 // trafficLightController: Bestämmer vilken sida som blir grön/röd utifrån aktuell kö och hur många bilar som finns på bron.
 void trafficLightController(Controller *self, int arg)
 {
@@ -28,17 +31,11 @@ void trafficLightController(Controller *self, int arg)
 	}
 	// Båda sidor har bilar i kö
 	else {
-		// Enkel logik: välj den senaste "queue sensor" (north eller south)
-		if (self->lastQueueSensor) {
-			// Senaste ankomst från northsound
-			newLights = NORTHGREEN_SOUTHRED;
-			} else {
-			// Senaste ankomst från southbound
-			newLights = NORTHRED_SOUTHGREEN;
+		newLights = self->lastQueueSensor ? NORTHGREEN_SOUTHRED :  NORTHRED_SOUTHGREEN;
 		}
 	}
 
-	// Om de nya lampinställningarna skiljer sig, uppdatera och skicka via seriell
+	// Om de nya lampinställningarna skiljer sig, uppdatera och skicka via serial.
 	if (newLights != self->LightStatus) {
 		self->LightStatus = newLights;
 		ASYNC(self->serialCom, USARTtransmit, newLights);
@@ -64,22 +61,19 @@ int afterRedGap(Controller *self, int arg) {
 }
 
 // bitParser: Hanterar inkommande bitar  (arrival och entry)
-void bitParser(Controller *self, int arg)
-{
-
-
+void bitParser(Controller *self, int arg) {
 	// HANTERA ANKOMSTER
-	if ((arg & NORTH_ARRIVAL) == NORTH_ARRIVAL) {
+	if (arg & NORTH_ARRIVAL) {
 		self->NorthQueue++;
 		self->lastQueueSensor = true;  // Senaste kön var från northbound.
 	}
-	if ((arg & SOUTH_ARRIVAL) == SOUTH_ARRIVAL) {
+	if (arg & SOUTH_ARRIVAL) {
 		self->SouthQueue++;
 		self->lastQueueSensor = false; // Senaste kön var från southbound.
 	}
 
 	// Hantera entries.
-	if ((arg & NORTH_ENTRY) == NORTH_ENTRY) {
+	if (arg & NORTH_ENTRY) {
 		// Kolla om north ljuset är grönt
 		if (self->LightStatus & NORTH_GREEN) {
 			if (self->NorthQueue > 0) {
@@ -98,7 +92,7 @@ void bitParser(Controller *self, int arg)
 		}
 	}
 
-	if ((arg & SOUTH_ENTRY) == SOUTH_ENTRY) {
+	if (arg & SOUTH_ENTRY) {
 		// Kolla om det south ljuset är grönt
 		if (self->LightStatus & SOUTH_GREEN) {
 			if (self->SouthQueue > 0) {
@@ -125,7 +119,6 @@ int sensorEvent(Controller *self, int sensorData) {
 	bitParser(self, (uint8_t) sensorData);
 	return 0;
 }
-
 
 int getNorthQueue(Controller *self, int unused) {
 	return self->NorthQueue;
