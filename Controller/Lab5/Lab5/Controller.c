@@ -1,23 +1,5 @@
 #include "Controller.h"
 
-// carLeavesBridge: AFTER 5 sekunder efter att en bil kör in.
-static int carLeavesBridge(Controller *self, int arg) {
-	// Minskar antalet bilar på bron om det är minst 1
-	if (self->BridgeAmount > 0) {
-		self->BridgeAmount--;
-	}
-	// Anropa trafficLightController för att uppdatera ljusen igen efter att bilen har lämnat
-	ASYNC(self, trafficLightController, 0);
-	return 0;
-}
-
-// afterRedGap: kort period med rött ljus på båda sidor efter att en bil har kört in
-static int afterRedGap(Controller *self, int arg) {
-	// Anropa trafficLightController igen för att bestämma vilka lampor som ska lysa
-	ASYNC(self, trafficLightController, 0);
-	return 0;
-}
-
 // trafficLightController: Bestämmer vilken sida som blir grön/röd utifrån aktuell kö och hur många bilar som finns på bron.
 void trafficLightController(Controller *self, int arg)
 {
@@ -36,11 +18,11 @@ void trafficLightController(Controller *self, int arg)
 	if (NQ == 0 && SQ == 0) {
 		newLights = NORTHRED_SOUTHRED;
 	}
-	// Endast bilar i norr
+	// Endast bilar i northbound
 	else if (NQ > 0 && SQ == 0) {
 		newLights = NORTHGREEN_SOUTHRED;
 	}
-	// Endast bilar i söder
+	// Endast bilar i southbound
 	else if (SQ > 0 && NQ == 0) {
 		newLights = NORTHRED_SOUTHGREEN;
 	}
@@ -61,6 +43,24 @@ void trafficLightController(Controller *self, int arg)
 		self->LightStatus = newLights;
 		ASYNC(self->serialCom, USARTtransmit, newLights);
 	}
+}
+
+// carLeavesBridge: AFTER 5 sekunder efter att en bil kör in.
+int carLeavesBridge(Controller *self, int arg) {
+	// Minskar antalet bilar på bron om det är minst 1
+	if (self->BridgeAmount > 0) {
+		self->BridgeAmount--;
+	}
+	// Anropa trafficLightController för att uppdatera ljusen igen efter att bilen har lämnat
+	ASYNC(self, trafficLightController, 0);
+	return 0;
+}
+
+// afterRedGap: kort period med rött ljus på båda sidor efter att en bil har kört in
+int afterRedGap(Controller *self, int arg) {
+	// Anropa trafficLightController igen för att bestämma vilka lampor som ska lysa
+	ASYNC(self, trafficLightController, 0);
+	return 0;
 }
 
 // bitParser: Hanterar inkommande bitar  (arrival och entry)
@@ -121,6 +121,10 @@ void bitParser(Controller *self, int arg)
 	ASYNC(self, trafficLightController, 0);
 }
 
+int sensorEvent(Controller *self, int sensorData) {
+	bitParser(self, (uint8_t) sensorData);
+	return 0;
+}
 
 
 int getNorthQueue(Controller *self, int unused) {

@@ -8,8 +8,8 @@
 #include "avr_init.h"
 
 // Skapar alla objekt.
-SerialCom	serial = initSerialCom();
-Controller	controller = initController(&serial);
+SerialCom serial = initSerialCom();
+Controller controller = initController(&serial);
 GUI	gui = initGUI(&controller);
 Interrupthandler ih = initInterruptHandler(&controller);
 

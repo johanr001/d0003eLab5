@@ -1,4 +1,9 @@
 #include "avr_init.h"
+#include <avr/io.h>
+
+#define FOSC 8000000UL // Clock Speed
+#define BAUD 9600
+#define MYUBRR FOSC/16/BAUD-1
 
 
 // avr_init() initierar klockan, timer1, prescalers etc.
