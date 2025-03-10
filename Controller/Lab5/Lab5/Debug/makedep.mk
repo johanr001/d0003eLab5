@@ -8,8 +8,6 @@ Controller.c
 
 GUI.c
 
-interruptHandler.c
-
 main.c
 
 serialCom.c

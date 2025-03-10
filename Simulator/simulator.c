@@ -86,14 +86,14 @@ void redrawInterface(void)
     printf("\033[H\033[J");
 
     // Bestäm textsträng för lamporna beroende på grönt eller rött
-    const char *northStatus = (northGreen ? "GREEN" : "RED");
-    const char *southStatus = (southGreen ? "GREEN" : "RED");
+    const char *northStatus = (northGreen ? "GREEN" : "RED  ");
+    const char *southStatus = (southGreen ? "GREEN" : "RED  ");
 
     // Utskrift av status och (eventuellt) inmatat kommando på samma rad
-    printf("NORTH: %s%s%s, SOUTH: %s%s%s | NorthQ=%d, SouthQ=%d, OnBridge=%d  Input: ",
+    printf("NORTH: %s%s%s, SOUTH: %s%s%s | North=%-2d, Bridge=%-2d, South=%-2d, Input: ",
            (northGreen ? greenColor : redColor), northStatus, resetColor,
            (southGreen ? greenColor : redColor), southStatus, resetColor,
-           northQueue, southQueue, carsOnBridge);
+           northQueue, carsOnBridge, southQueue);
     
     // Om vi redan har ett inmatat tecken (cmdChar), skriv ut det
     if (cmdChar != '\0') { // Om cmdChar inte är null så har vi en karaktär

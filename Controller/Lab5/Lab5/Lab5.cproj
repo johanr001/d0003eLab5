@@ -154,12 +154,6 @@
     <Compile Include="GUI.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="interruptHandler.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="interruptHandler.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>

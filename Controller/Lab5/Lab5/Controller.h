@@ -1,9 +1,8 @@
-#ifndef CONTROLLER_H_
-#define CONTROLLER_H_
+#ifndef CONTROLLER_H
+#define CONTROLLER_H
 
-#include "serialCom.h"
 #include "TinyTimber.h"
-#include <avr/io.h>
+#include "serialCom.h"
 #include <stdbool.h>
 
 #define NORTH_ARRIVAL  0b00000001
@@ -16,39 +15,38 @@
 #define SOUTH_GREEN    0b00000100
 #define SOUTH_RED      0b00001000
 
-#define NORTHRED_SOUTHRED     (NORTH_RED   | SOUTH_RED)
-#define NORTHGREEN_SOUTHRED   (NORTH_GREEN | SOUTH_RED)
-#define NORTHRED_SOUTHGREEN   (NORTH_RED   | SOUTH_GREEN)
+#define IDLE_DELAY_MSEC 500 // Tiden för idle att loopa.
 
-#define BRIDGE_TIME_MS   5000  // 5 sekunders bro tid.
-#define ALL_RED_GAP_MS   1000  // 1 sekunds all-red gap
+#define GREEN_LIGHT_TIME_MSEC 500 // Låt grönt ljus vara på en liten stund så att man faktiskt ser den ändras.
 
+#define MAX_PASS_SAME_SIDE 10 // Starvation gräns.
 
-#define MAX_PASS_SAME_SIDE 4 // Starvation gräns.
+#define TIME_QUEUE 1 // Tiden det tar för bilar att queuea på bron efter varandra.
+#define BRIDGE_TIME 5 // Tiden det tar för bilar att åka över bron.
 
 typedef struct {
-	Object     super;
+	Object super;
 	SerialCom *serialCom;
 	unsigned long NorthQueue; // Antalet bilar som finns i NorthBound kön.
 	unsigned long SouthQueue; // Antalet bilar som finns i SouthBound kön.
 	unsigned long BridgeAmount; // Antalet bilar på bron just nu.
-	unsigned char LightStatus; // Bitsen för vilka lampbits som är aktiverade.
 	unsigned long BridgePassedSameDir; // Resetta och checka hur många bilar som passerat bridge, för starvation.
 	bool lastBridgeDir; // Om 1 var northbound den bridge arrival, om 0 var southbound den sista på bridge.
-	bool lastQueueSensor; // Sista hållet sensorn var från bil kön. 1 för north och 0 för south.
 } Controller;
 
-#define initController(s) { initObject(), s, 0, 0, 0, NORTHRED_SOUTHRED, 0, 0, 0 }
+#define initController(serialCom) { initObject(), serialCom, 0, 0, 0, 0, 0 }
 
-void bitParser(Controller *self, int arg);
+int bitParser(Controller *self, int arg);
+int updateBridgeAmount(Controller *self, int arg);
+int idleState(Controller *self, int arg);
+int waitForBridgeClearance(Controller *self, int arg);
+int dispatchNextCar(Controller *self, int arg);
+int signalGreenLight(Controller *self, int arg);
+int monitorCarEntry(Controller *self, int arg);
 
-int sensorEvent(Controller *self, int arg);
 int getNorthQueue(Controller *self, int arg);
-int getSouthQueue(Controller *self, int arg);
 int getBridgeAmount(Controller *self, int arg);
+int getSouthQueue(Controller *self, int arg);
 
-int LampController(Controller *self, int arg);
-int carLeavesBridge(Controller *self, int arg);
-int afterRedGap(Controller *self, int arg);
 
-#endif /* CONTROLLER_H_ */
+#endif

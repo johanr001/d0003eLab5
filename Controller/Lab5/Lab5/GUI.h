@@ -1,13 +1,13 @@
-#ifndef GUI_H_
-#define GUI_H_
+#ifndef GUI_H
+#define GUI_H
 
 #include "TinyTimber.h"
 #include "Controller.h"
+#include <stdbool.h>
 #include <avr/io.h>
-#include <stdint.h>
 
 typedef struct {
-	Object     super;
+	Object super;
 	Controller *controller;
 } GUI;
 
@@ -20,4 +20,4 @@ void lcd_init(void);
 void writeChar(char ch, int pos);
 void printAt(long num, int pos);
 
-#endif /* GUI_H_ */
+#endif

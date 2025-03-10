@@ -61,10 +61,9 @@ void printAt(long num, int pos) {
 	writeChar( (num % 100) / 10 + '0', pp);
 	pp++;
 	writeChar( num % 10 + '0', pp);
-	
 }
 
-// updateDisplay: Hämtar värden för NorthQueue, BridgeAmount, SouthQueue och skriver på LCD
+// updateDisplay() Hämtar värden för NorthQueue, BridgeAmount, SouthQueue och skriver på LCD
 int updateDisplay(GUI *self, int arg) {
 	printAt(SYNC(self->controller, getNorthQueue, 0), 0);
 	printAt(SYNC(self->controller, getBridgeAmount, 0), 2);
@@ -72,12 +71,14 @@ int updateDisplay(GUI *self, int arg) {
 	return 0;
 }
 
-// periodicUpdate: uppdaterar displayen och schemalägger sig själv igen
+// periodicUpdate() uppdaterar displayen och callar sen after.
 int periodicUpdate(GUI *self, int arg) {
-	// Uppdatera displayen omedelbart
+	// Uppdatera displayen direkt.
 	ASYNC(self, updateDisplay, 0);
 
-	// Schemalägg nästa uppdatering efter 500 ms
-	AFTER(MSEC(500), self, periodicUpdate, 0);
+	// Calla after sen igen för att uppdatera displayen.
+	AFTER(MSEC(100), self, periodicUpdate, 0);
 	return 0;
 }
+
+
