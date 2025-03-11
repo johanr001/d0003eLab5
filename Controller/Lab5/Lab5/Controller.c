@@ -94,8 +94,8 @@ int waitForBridgeClearance(Controller *self, int arg) {
     ASYNC(self, idleState, 0);
   } else {
     AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance,
-          0); // Kontrollera igen senare. Den callar sig själv, om inte har så
-              // kommer den drifta eftersom AFTER tiden ökar.
+          0); // Kontrollera igen senare. Den callar sig själv, om inte har
+              // CURRENT_OFFSET kommer den drifta eftersom AFTER tiden ökar
   }
   return 0;
 }
