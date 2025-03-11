@@ -1,17 +1,17 @@
 #ifndef GUI_H
 #define GUI_H
 
-#include "TinyTimber.h"
 #include "Controller.h"
-#include <stdbool.h>
+#include "TinyTimber.h"
 #include <avr/io.h>
+#include <stdbool.h>
 
 typedef struct {
-	Object super;
-	Controller *controller;
+  Object super;
+  Controller *controller;
 } GUI;
 
-#define initGUI(controller) { initObject(), controller }
+#define initGUI(controller) {initObject(), controller}
 
 int updateDisplay(GUI *self, int arg);
 int periodicUpdate(GUI *self, int arg);

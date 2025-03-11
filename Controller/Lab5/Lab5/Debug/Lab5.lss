@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 00001027  00000000  00000000  000053c4  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   000015cd  00000000  00000000  000063eb  2**0
+  8 .debug_line   0000162e  00000000  00000000  000063eb  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000cec  00000000  00000000  000079b8  2**2
+  9 .debug_frame  00000cec  00000000  00000000  00007a1c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000009e0  00000000  00000000  000086a4  2**0
+ 10 .debug_str    000009e0  00000000  00000000  00008708  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00002a52  00000000  00000000  00009084  2**0
+ 11 .debug_loc    00002a52  00000000  00000000  000090e8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000210  00000000  00000000  0000bad6  2**0
+ 12 .debug_ranges 00000210  00000000  00000000  0000bb3a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -99,72 +99,72 @@ Disassembly of section .text:
 
 0000009a <avr_init>:
 #define BAUD 9600
-#define MYUBRR FOSC/16/BAUD-1
+#define MYUBRR FOSC / 16 / BAUD - 1
 
 // avr_init() initierar klockan, timer1, prescalers etc.
-void avr_init(){
-	CLKPR = 0x80;
+void avr_init() {
+  CLKPR = 0x80;
       9a:	e1 e6       	ldi	r30, 0x61	; 97
       9c:	f0 e0       	ldi	r31, 0x00	; 0
       9e:	80 e8       	ldi	r24, 0x80	; 128
       a0:	80 83       	st	Z, r24
-	CLKPR = 0x00;
+  CLKPR = 0x00;
       a2:	10 82       	st	Z, r1
 
-	
-	TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);
+  TCCR1B |= (1 << CS10) | (1 << CS12) | (1 << WGM12);
       a4:	e1 e8       	ldi	r30, 0x81	; 129
       a6:	f0 e0       	ldi	r31, 0x00	; 0
       a8:	80 81       	ld	r24, Z
       aa:	8d 60       	ori	r24, 0x0D	; 13
       ac:	80 83       	st	Z, r24
-	
-	TCNT1 = 0;
+
+  TCNT1 = 0;
       ae:	10 92 85 00 	sts	0x0085, r1	; 0x800085 <__TEXT_REGION_LENGTH__+0x7fc085>
       b2:	10 92 84 00 	sts	0x0084, r1	; 0x800084 <__TEXT_REGION_LENGTH__+0x7fc084>
-	
-	TIMSK1 |= (1 << OCIE1A);
+
+  TIMSK1 |= (1 << OCIE1A);
       b6:	ef e6       	ldi	r30, 0x6F	; 111
       b8:	f0 e0       	ldi	r31, 0x00	; 0
       ba:	80 81       	ld	r24, Z
       bc:	82 60       	ori	r24, 0x02	; 2
       be:	80 83       	st	Z, r24
-	OCR1A=194; //f_oCnA = (f_clk_I/O)/(2*N*(1+OCRnA) 194 eller 3905 för en sekund
+  OCR1A =
       c0:	e2 ec       	ldi	r30, 0xC2	; 194
       c2:	f0 e0       	ldi	r31, 0x00	; 0
       c4:	f0 93 89 00 	sts	0x0089, r31	; 0x800089 <__TEXT_REGION_LENGTH__+0x7fc089>
       c8:	e0 93 88 00 	sts	0x0088, r30	; 0x800088 <__TEXT_REGION_LENGTH__+0x7fc088>
-	
-	UBRR0H |= (MYUBRR>>8);
+      194; // f_oCnA = (f_clk_I/O)/(2*N*(1+OCRnA) 194 eller 3905 för en sekund
+
+  UBRR0H |= (MYUBRR >> 8);
       cc:	a5 ec       	ldi	r26, 0xC5	; 197
       ce:	b0 e0       	ldi	r27, 0x00	; 0
       d0:	8c 91       	ld	r24, X
       d2:	8c 93       	st	X, r24
-	UBRR0L |= MYUBRR;
+  UBRR0L |= MYUBRR;
       d4:	a4 ec       	ldi	r26, 0xC4	; 196
       d6:	b0 e0       	ldi	r27, 0x00	; 0
       d8:	8c 91       	ld	r24, X
       da:	83 63       	ori	r24, 0x33	; 51
       dc:	8c 93       	st	X, r24
-	// Reciever, transmitter, och interrupt.
-	UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
+  // Reciever, transmitter, och interrupt.
+  UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
       de:	88 e9       	ldi	r24, 0x98	; 152
       e0:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7fc0c1>
-	// 8 Data, 1 stop bit
-	UCSR0C = (0 << USBS0) | (1 << UCSZ01) | (1 << UCSZ00);
+  // 8 Data, 1 stop bit
+  UCSR0C = (0 << USBS0) | (1 << UCSZ01) | (1 << UCSZ00);
       e4:	86 e0       	ldi	r24, 0x06	; 6
       e6:	80 83       	st	Z, r24
       e8:	08 95       	ret
 
 000000ea <updateBridgeAmount>:
-	}
+  }
 
-	return 0;
+  return 0;
 }
-
+// updateBridgeAmount så man can calla med AFTER i bitParsern.
 int updateBridgeAmount(Controller *self, int arg) {
       ea:	fc 01       	movw	r30, r24
-	self->BridgeAmount += arg;
+  self->BridgeAmount += arg;
       ec:	ab 01       	movw	r20, r22
       ee:	77 0f       	add	r23, r23
       f0:	66 0b       	sbc	r22, r22
@@ -181,14 +181,15 @@ int updateBridgeAmount(Controller *self, int arg) {
      106:	97 87       	std	Z+15, r25	; 0x0f
      108:	a0 8b       	std	Z+16, r26	; 0x10
      10a:	b1 8b       	std	Z+17, r27	; 0x11
-	return 0;
+  return 0;
 }
      10c:	80 e0       	ldi	r24, 0x00	; 0
      10e:	90 e0       	ldi	r25, 0x00	; 0
      110:	08 95       	ret
 
 00000112 <idleState>:
-
+// idleState hanterar bron när den är tom, och bestämmer vilken bil som ska
+// passera
 int idleState(Controller *self, int arg) {
      112:	cf 92       	push	r12
      114:	df 92       	push	r13
@@ -199,14 +200,21 @@ int idleState(Controller *self, int arg) {
      11e:	cf 93       	push	r28
      120:	df 93       	push	r29
      122:	fc 01       	movw	r30, r24
-	self->BridgePassedSameDir = 0;
+  self->BridgePassedSameDir = 0; // Nollställ.
      124:	12 8a       	std	Z+18, r1	; 0x12
      126:	13 8a       	std	Z+19, r1	; 0x13
      128:	14 8a       	std	Z+20, r1	; 0x14
      12a:	15 8a       	std	Z+21, r1	; 0x15
-	
-	int *priorityQueue = self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
+  // Bestämmer vilken queue som ska prioriteras baserat på lastBridgeDir.
+  int *priorityQueue =
+      self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
      12c:	86 89       	ldd	r24, Z+22	; 0x16
+// idleState hanterar bron när den är tom, och bestämmer vilken bil som ska
+// passera
+int idleState(Controller *self, int arg) {
+  self->BridgePassedSameDir = 0; // Nollställ.
+  // Bestämmer vilken queue som ska prioriteras baserat på lastBridgeDir.
+  int *priorityQueue =
      12e:	88 23       	and	r24, r24
      130:	19 f0       	breq	.+6      	; 0x138 <idleState+0x26>
      132:	df 01       	movw	r26, r30
@@ -214,7 +222,8 @@ int idleState(Controller *self, int arg) {
      136:	02 c0       	rjmp	.+4      	; 0x13c <idleState+0x2a>
      138:	df 01       	movw	r26, r30
      13a:	16 96       	adiw	r26, 0x06	; 6
-	int *secondaryQueue = self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
+      self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
+  int *secondaryQueue =
      13c:	88 23       	and	r24, r24
      13e:	19 f0       	breq	.+6      	; 0x146 <idleState+0x34>
      140:	ef 01       	movw	r28, r30
@@ -222,18 +231,19 @@ int idleState(Controller *self, int arg) {
      144:	02 c0       	rjmp	.+4      	; 0x14a <idleState+0x38>
      146:	ef 01       	movw	r28, r30
      148:	2a 96       	adiw	r28, 0x0a	; 10
-
-	if (*priorityQueue > 0) {
+      self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
+  // Om den prioriterade queuen har bilar, ändra riktning och skicka nästa bil.
+  if (*priorityQueue > 0) {
      14a:	2d 91       	ld	r18, X+
      14c:	3c 91       	ld	r19, X
      14e:	12 16       	cp	r1, r18
      150:	13 06       	cpc	r1, r19
      152:	ac f4       	brge	.+42     	; 0x17e <idleState+0x6c>
-		self->lastBridgeDir = !self->lastBridgeDir;
+    self->lastBridgeDir = !self->lastBridgeDir;
      154:	91 e0       	ldi	r25, 0x01	; 1
      156:	89 27       	eor	r24, r25
      158:	86 8b       	std	Z+22, r24	; 0x16
-		ASYNC(self, dispatchNextCar, 0);
+    ASYNC(self, dispatchNextCar, 0);
      15a:	c1 2c       	mov	r12, r1
      15c:	d1 2c       	mov	r13, r1
      15e:	0f 2e       	mov	r0, r31
@@ -251,13 +261,15 @@ int idleState(Controller *self, int arg) {
      176:	cb 01       	movw	r24, r22
      178:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
      17c:	29 c0       	rjmp	.+82     	; 0x1d0 <idleState+0xbe>
-		} else if (*secondaryQueue > 0) {
+  }
+  // Om den andra kön har bilar, skicka nästa bil.
+  else if (*secondaryQueue > 0) {
      17e:	88 81       	ld	r24, Y
      180:	99 81       	ldd	r25, Y+1	; 0x01
      182:	18 16       	cp	r1, r24
      184:	19 06       	cpc	r1, r25
      186:	94 f4       	brge	.+36     	; 0x1ac <idleState+0x9a>
-		ASYNC(self, dispatchNextCar, 0);
+    ASYNC(self, dispatchNextCar, 0);
      188:	c1 2c       	mov	r12, r1
      18a:	d1 2c       	mov	r13, r1
      18c:	0f 2e       	mov	r0, r31
@@ -275,8 +287,10 @@ int idleState(Controller *self, int arg) {
      1a4:	cb 01       	movw	r24, r22
      1a6:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
      1aa:	12 c0       	rjmp	.+36     	; 0x1d0 <idleState+0xbe>
-		} else {
-		AFTER(MSEC(IDLE_DELAY_MSEC), self, idleState, 0);
+  }
+  // Om inga bilar finns i någon kö, loopa igen.
+  else {
+    AFTER(MSEC(IDLE_DELAY_MSEC), self, idleState, 0);
      1ac:	c1 2c       	mov	r12, r1
      1ae:	d1 2c       	mov	r13, r1
      1b0:	0f 2e       	mov	r0, r31
@@ -294,9 +308,8 @@ int idleState(Controller *self, int arg) {
      1c8:	80 e0       	ldi	r24, 0x00	; 0
      1ca:	90 e0       	ldi	r25, 0x00	; 0
      1cc:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	}
-	
-	return 0;
+  }
+  return 0;
 }
      1d0:	80 e0       	ldi	r24, 0x00	; 0
      1d2:	90 e0       	ldi	r25, 0x00	; 0
@@ -311,7 +324,7 @@ int idleState(Controller *self, int arg) {
      1e4:	08 95       	ret
 
 000001e6 <waitForBridgeClearance>:
-
+// Väntar tills bron är tom innan en ny bil kan skickas.
 int waitForBridgeClearance(Controller *self, int arg) {
      1e6:	cf 92       	push	r12
      1e8:	df 92       	push	r13
@@ -320,7 +333,7 @@ int waitForBridgeClearance(Controller *self, int arg) {
      1ee:	0f 93       	push	r16
      1f0:	1f 93       	push	r17
      1f2:	8c 01       	movw	r16, r24
-	if (self->BridgeAmount == 0) {
+  if (self->BridgeAmount == 0) { // Om bron är tom, gå till idle.
      1f4:	fc 01       	movw	r30, r24
      1f6:	86 85       	ldd	r24, Z+14	; 0x0e
      1f8:	97 85       	ldd	r25, Z+15	; 0x0f
@@ -330,7 +343,7 @@ int waitForBridgeClearance(Controller *self, int arg) {
      200:	8a 2b       	or	r24, r26
      202:	8b 2b       	or	r24, r27
      204:	89 f4       	brne	.+34     	; 0x228 <__EEPROM_REGION_LENGTH__+0x28>
-		ASYNC(self, idleState, 0);
+    ASYNC(self, idleState, 0);
      206:	c1 2c       	mov	r12, r1
      208:	d1 2c       	mov	r13, r1
      20a:	0f 2e       	mov	r0, r31
@@ -347,8 +360,8 @@ int waitForBridgeClearance(Controller *self, int arg) {
      220:	cb 01       	movw	r24, r22
      222:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
      226:	0f c0       	rjmp	.+30     	; 0x246 <__EEPROM_REGION_LENGTH__+0x46>
-		} else {
-		AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance, 0);
+  } else {
+    AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance,
      228:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      22c:	c1 2c       	mov	r12, r1
      22e:	d1 2c       	mov	r13, r1
@@ -362,8 +375,9 @@ int waitForBridgeClearance(Controller *self, int arg) {
      23e:	30 e0       	ldi	r19, 0x00	; 0
      240:	a9 01       	movw	r20, r18
      242:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	}
-	return 0;
+          0); // Kontrollera igen senare.
+  }
+  return 0;
 }
      246:	80 e0       	ldi	r24, 0x00	; 0
      248:	90 e0       	ldi	r25, 0x00	; 0
@@ -376,7 +390,7 @@ int waitForBridgeClearance(Controller *self, int arg) {
      256:	08 95       	ret
 
 00000258 <dispatchNextCar>:
-
+// dispatchNextCar avgör om nästa bil kan skickas ut på bron.
 int dispatchNextCar(Controller *self, int arg) {
      258:	cf 92       	push	r12
      25a:	df 92       	push	r13
@@ -384,16 +398,24 @@ int dispatchNextCar(Controller *self, int arg) {
      25e:	ff 92       	push	r15
      260:	0f 93       	push	r16
      262:	1f 93       	push	r17
-	int *currentQueue = self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
+  int *currentQueue =
+      self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
      264:	fc 01       	movw	r30, r24
      266:	26 89       	ldd	r18, Z+22	; 0x16
+  }
+  return 0;
+}
+// dispatchNextCar avgör om nästa bil kan skickas ut på bron.
+int dispatchNextCar(Controller *self, int arg) {
+  int *currentQueue =
      268:	22 23       	and	r18, r18
      26a:	11 f0       	breq	.+4      	; 0x270 <dispatchNextCar+0x18>
      26c:	36 96       	adiw	r30, 0x06	; 6
      26e:	02 c0       	rjmp	.+4      	; 0x274 <dispatchNextCar+0x1c>
      270:	fc 01       	movw	r30, r24
      272:	3a 96       	adiw	r30, 0x0a	; 10
-	int *oppositeQueue = self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
+      self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
+  int *oppositeQueue =
      274:	22 23       	and	r18, r18
      276:	19 f0       	breq	.+6      	; 0x27e <dispatchNextCar+0x26>
      278:	dc 01       	movw	r26, r24
@@ -401,28 +423,38 @@ int dispatchNextCar(Controller *self, int arg) {
      27c:	02 c0       	rjmp	.+4      	; 0x282 <dispatchNextCar+0x2a>
      27e:	dc 01       	movw	r26, r24
      280:	16 96       	adiw	r26, 0x06	; 6
-
-	if (!(*currentQueue) || (self->BridgePassedSameDir >= MAX_PASS_SAME_SIDE && *oppositeQueue > 0)) {
+      self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
+  // Om kön är tom eller för många bilar passerat i samma riktning, vänta på att
+  // bron blir tom.
+  if (!(*currentQueue) ||
      282:	20 81       	ld	r18, Z
      284:	31 81       	ldd	r19, Z+1	; 0x01
      286:	23 2b       	or	r18, r19
      288:	79 f0       	breq	.+30     	; 0x2a8 <dispatchNextCar+0x50>
+      (self->BridgePassedSameDir >= MAX_PASS_SAME_SIDE && *oppositeQueue > 0)) {
      28a:	fc 01       	movw	r30, r24
      28c:	42 89       	ldd	r20, Z+18	; 0x12
      28e:	53 89       	ldd	r21, Z+19	; 0x13
      290:	64 89       	ldd	r22, Z+20	; 0x14
      292:	75 89       	ldd	r23, Z+21	; 0x15
+      self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
+  int *oppositeQueue =
+      self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
+  // Om kön är tom eller för många bilar passerat i samma riktning, vänta på att
+  // bron blir tom.
+  if (!(*currentQueue) ||
      294:	4a 30       	cpi	r20, 0x0A	; 10
      296:	51 05       	cpc	r21, r1
      298:	61 05       	cpc	r22, r1
      29a:	71 05       	cpc	r23, r1
      29c:	b8 f0       	brcs	.+46     	; 0x2cc <dispatchNextCar+0x74>
+      (self->BridgePassedSameDir >= MAX_PASS_SAME_SIDE && *oppositeQueue > 0)) {
      29e:	2d 91       	ld	r18, X+
      2a0:	3c 91       	ld	r19, X
      2a2:	12 16       	cp	r1, r18
      2a4:	13 06       	cpc	r1, r19
      2a6:	94 f4       	brge	.+36     	; 0x2cc <dispatchNextCar+0x74>
-		ASYNC(self, waitForBridgeClearance, 0);
+    ASYNC(self, waitForBridgeClearance, 0);
      2a8:	c1 2c       	mov	r12, r1
      2aa:	d1 2c       	mov	r13, r1
      2ac:	0f 2e       	mov	r0, r31
@@ -439,11 +471,11 @@ int dispatchNextCar(Controller *self, int arg) {
      2c2:	70 e0       	ldi	r23, 0x00	; 0
      2c4:	cb 01       	movw	r24, r22
      2c6:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-		return 0;
+    return 0;
      2ca:	11 c0       	rjmp	.+34     	; 0x2ee <dispatchNextCar+0x96>
-	}
-
-	ASYNC(self, signalGreenLight, 0);
+  }
+  // Skicka signal att tända grönt för nästa bil.
+  ASYNC(self, signalGreenLight, 0);
      2cc:	c1 2c       	mov	r12, r1
      2ce:	d1 2c       	mov	r13, r1
      2d0:	0f 2e       	mov	r0, r31
@@ -460,7 +492,7 @@ int dispatchNextCar(Controller *self, int arg) {
      2e6:	70 e0       	ldi	r23, 0x00	; 0
      2e8:	cb 01       	movw	r24, r22
      2ea:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	return 0;
+  return 0;
 }
      2ee:	80 e0       	ldi	r24, 0x00	; 0
      2f0:	90 e0       	ldi	r25, 0x00	; 0
@@ -473,7 +505,7 @@ int dispatchNextCar(Controller *self, int arg) {
      2fe:	08 95       	ret
 
 00000300 <signalGreenLight>:
-
+// singnalGreenLight tänder ljuset åt rätt riktning.
 int signalGreenLight(Controller *self, int arg) {
      300:	cf 92       	push	r12
      302:	df 92       	push	r13
@@ -484,7 +516,7 @@ int signalGreenLight(Controller *self, int arg) {
      30c:	cf 93       	push	r28
      30e:	df 93       	push	r29
      310:	ec 01       	movw	r28, r24
-	int data = self->lastBridgeDir ? NORTH_GREEN : SOUTH_GREEN;
+  int bits = self->lastBridgeDir ? NORTH_GREEN : SOUTH_GREEN;
      312:	8e 89       	ldd	r24, Y+22	; 0x16
      314:	88 23       	and	r24, r24
      316:	21 f0       	breq	.+8      	; 0x320 <signalGreenLight+0x20>
@@ -496,7 +528,7 @@ int signalGreenLight(Controller *self, int arg) {
      322:	cc 24       	eor	r12, r12
      324:	c2 f8       	bld	r12, 2
      326:	d1 2c       	mov	r13, r1
-	ASYNC(self->serialCom, USARTtransmit, data);
+  ASYNC(self->serialCom, USARTtransmit, bits); // Skicka signal för rätt ljus.
      328:	0c 81       	ldd	r16, Y+4	; 0x04
      32a:	1d 81       	ldd	r17, Y+5	; 0x05
      32c:	0f 2e       	mov	r0, r31
@@ -513,8 +545,8 @@ int signalGreenLight(Controller *self, int arg) {
      342:	cb 01       	movw	r24, r22
      344:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
 
-	// Add a delay before transitioning to `wait_car_entry`
-	AFTER(CURRENT_OFFSET() + MSEC(GREEN_LIGHT_TIME_MSEC), self, monitorCarEntry, 0);
+  // Vänta en kort stund innan bilen får köra in.
+  AFTER(CURRENT_OFFSET() + MSEC(GREEN_LIGHT_TIME_MSEC), self, monitorCarEntry,
      348:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      34c:	67 5f       	subi	r22, 0xF7	; 247
      34e:	72 4c       	sbci	r23, 0xC2	; 194
@@ -533,7 +565,8 @@ int signalGreenLight(Controller *self, int arg) {
      368:	30 e0       	ldi	r19, 0x00	; 0
      36a:	a9 01       	movw	r20, r18
      36c:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	return 0;
+        0);
+  return 0;
 }
      370:	80 e0       	ldi	r24, 0x00	; 0
      372:	90 e0       	ldi	r25, 0x00	; 0
@@ -548,7 +581,7 @@ int signalGreenLight(Controller *self, int arg) {
      384:	08 95       	ret
 
 00000386 <monitorCarEntry>:
-
+// monitorCarEntry ser till att en bil kör in på bron efter att ha fått grönt.
 int monitorCarEntry(Controller *self, int arg) {
      386:	cf 92       	push	r12
      388:	df 92       	push	r13
@@ -559,7 +592,7 @@ int monitorCarEntry(Controller *self, int arg) {
      392:	cf 93       	push	r28
      394:	df 93       	push	r29
      396:	ec 01       	movw	r28, r24
-	if (self->BridgeAmount > 0) {  // A car has entered
+  if (self->BridgeAmount > 0) { // Om en bil har kört in på bron.
      398:	8e 85       	ldd	r24, Y+14	; 0x0e
      39a:	9f 85       	ldd	r25, Y+15	; 0x0f
      39c:	a8 89       	ldd	r26, Y+16	; 0x10
@@ -568,7 +601,7 @@ int monitorCarEntry(Controller *self, int arg) {
      3a2:	8a 2b       	or	r24, r26
      3a4:	8b 2b       	or	r24, r27
      3a6:	89 f1       	breq	.+98     	; 0x40a <__DATA_REGION_LENGTH__+0xa>
-		int bits = self->lastBridgeDir ? NORTH_RED : SOUTH_RED;
+    int bits = self->lastBridgeDir ? NORTH_RED : SOUTH_RED;
      3a8:	8e 89       	ldd	r24, Y+22	; 0x16
      3aa:	88 23       	and	r24, r24
      3ac:	29 f0       	breq	.+10     	; 0x3b8 <monitorCarEntry+0x32>
@@ -581,7 +614,7 @@ int monitorCarEntry(Controller *self, int arg) {
      3ba:	cc 24       	eor	r12, r12
      3bc:	c3 f8       	bld	r12, 3
      3be:	d1 2c       	mov	r13, r1
-		ASYNC(self->serialCom, USARTtransmit, bits);
+    ASYNC(self->serialCom, USARTtransmit,
      3c0:	0c 81       	ldd	r16, Y+4	; 0x04
      3c2:	1d 81       	ldd	r17, Y+5	; 0x05
      3c4:	0f 2e       	mov	r0, r31
@@ -597,7 +630,8 @@ int monitorCarEntry(Controller *self, int arg) {
      3d8:	70 e0       	ldi	r23, 0x00	; 0
      3da:	cb 01       	movw	r24, r22
      3dc:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-		AFTER(CURRENT_OFFSET() + SEC(TIME_QUEUE), self, dispatchNextCar, 0);
+          bits); // Tänd rött ljus för att stoppa nästa bil.
+    AFTER(CURRENT_OFFSET() + SEC(TIME_QUEUE), self, dispatchNextCar,
      3e0:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      3e4:	6e 5e       	subi	r22, 0xEE	; 238
      3e6:	75 48       	sbci	r23, 0x85	; 133
@@ -617,8 +651,9 @@ int monitorCarEntry(Controller *self, int arg) {
      402:	a9 01       	movw	r20, r18
      404:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
      408:	10 c0       	rjmp	.+32     	; 0x42a <__DATA_REGION_LENGTH__+0x2a>
-		} else {
-		AFTER(CURRENT_OFFSET(), self, monitorCarEntry, 0);
+          0); // Vänta innan nästa bil skickas.
+  } else {
+    AFTER(CURRENT_OFFSET(), self, monitorCarEntry,
      40a:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      40e:	c1 2c       	mov	r12, r1
      410:	d1 2c       	mov	r13, r1
@@ -633,8 +668,9 @@ int monitorCarEntry(Controller *self, int arg) {
      422:	30 e0       	ldi	r19, 0x00	; 0
      424:	a9 01       	movw	r20, r18
      426:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	}
-	return 0;
+          0); // Kontrollera igen om ingen bil har kört in.
+  }
+  return 0;
 }
      42a:	80 e0       	ldi	r24, 0x00	; 0
      42c:	90 e0       	ldi	r25, 0x00	; 0
@@ -651,6 +687,7 @@ int monitorCarEntry(Controller *self, int arg) {
 00000440 <bitParser>:
 #include "Controller.h"
 
+// Bitparser tolkar data från USART och uppdaterar queue och bron.
 int bitParser(Controller *self, int arg) {
      440:	bf 92       	push	r11
      442:	cf 92       	push	r12
@@ -662,7 +699,7 @@ int bitParser(Controller *self, int arg) {
      44e:	cf 93       	push	r28
      450:	df 93       	push	r29
      452:	ec 01       	movw	r28, r24
-	int data = SYNC(self->serialCom, USARTreceive, 0);
+  int data =
      454:	40 e0       	ldi	r20, 0x00	; 0
      456:	50 e0       	ldi	r21, 0x00	; 0
      458:	64 e5       	ldi	r22, 0x54	; 84
@@ -671,11 +708,12 @@ int bitParser(Controller *self, int arg) {
      45e:	9d 81       	ldd	r25, Y+5	; 0x05
      460:	0e 94 b6 0f 	call	0x1f6c	; 0x1f6c <sync>
      464:	b8 2e       	mov	r11, r24
-
-	if (data & NORTH_ARRIVAL) {
+      SYNC(self->serialCom, USARTreceive, 0); // Hämtar datan från USART:en.
+  // Om en bil kommer från NORTH, öka NORTH.
+  if (data & NORTH_ARRIVAL) {
      466:	80 ff       	sbrs	r24, 0
      468:	0b c0       	rjmp	.+22     	; 0x480 <bitParser+0x40>
-		self->NorthQueue++;
+    self->NorthQueue++;
      46a:	8e 81       	ldd	r24, Y+6	; 0x06
      46c:	9f 81       	ldd	r25, Y+7	; 0x07
      46e:	a8 85       	ldd	r26, Y+8	; 0x08
@@ -687,12 +725,12 @@ int bitParser(Controller *self, int arg) {
      47a:	9f 83       	std	Y+7, r25	; 0x07
      47c:	a8 87       	std	Y+8, r26	; 0x08
      47e:	b9 87       	std	Y+9, r27	; 0x09
-	}
-
-	if (data & SOUTH_ARRIVAL) {
+  }
+  // Om en bil kommer från SOUTH, öka SOUTH.
+  if (data & SOUTH_ARRIVAL) {
      480:	b2 fe       	sbrs	r11, 2
      482:	0b c0       	rjmp	.+22     	; 0x49a <bitParser+0x5a>
-		self->SouthQueue++;
+    self->SouthQueue++;
      484:	8a 85       	ldd	r24, Y+10	; 0x0a
      486:	9b 85       	ldd	r25, Y+11	; 0x0b
      488:	ac 85       	ldd	r26, Y+12	; 0x0c
@@ -704,12 +742,12 @@ int bitParser(Controller *self, int arg) {
      494:	9b 87       	std	Y+11, r25	; 0x0b
      496:	ac 87       	std	Y+12, r26	; 0x0c
      498:	bd 87       	std	Y+13, r27	; 0x0d
-	}
-
-	if (data & NORTH_ENTRY) {
+  }
+  // Om en bil kör in på bron från NORTH.
+  if (data & NORTH_ENTRY) {
      49a:	b1 fe       	sbrs	r11, 1
      49c:	36 c0       	rjmp	.+108    	; 0x50a <__stack+0xb>
-		self->NorthQueue--;
+    self->NorthQueue--;          // Minska NorthQueue.
      49e:	8e 81       	ldd	r24, Y+6	; 0x06
      4a0:	9f 81       	ldd	r25, Y+7	; 0x07
      4a2:	a8 85       	ldd	r26, Y+8	; 0x08
@@ -721,7 +759,7 @@ int bitParser(Controller *self, int arg) {
      4ae:	9f 83       	std	Y+7, r25	; 0x07
      4b0:	a8 87       	std	Y+8, r26	; 0x08
      4b2:	b9 87       	std	Y+9, r27	; 0x09
-		self->BridgeAmount++;
+    self->BridgeAmount++;        // Öka bilar på bron.
      4b4:	8e 85       	ldd	r24, Y+14	; 0x0e
      4b6:	9f 85       	ldd	r25, Y+15	; 0x0f
      4b8:	a8 89       	ldd	r26, Y+16	; 0x10
@@ -733,7 +771,7 @@ int bitParser(Controller *self, int arg) {
      4c4:	9f 87       	std	Y+15, r25	; 0x0f
      4c6:	a8 8b       	std	Y+16, r26	; 0x10
      4c8:	b9 8b       	std	Y+17, r27	; 0x11
-		self->BridgePassedSameDir++;
+    self->BridgePassedSameDir++; // Öka hur många bilar som har åkt i samma
      4ca:	8a 89       	ldd	r24, Y+18	; 0x12
      4cc:	9b 89       	ldd	r25, Y+19	; 0x13
      4ce:	ac 89       	ldd	r26, Y+20	; 0x14
@@ -745,7 +783,8 @@ int bitParser(Controller *self, int arg) {
      4da:	9b 8b       	std	Y+19, r25	; 0x13
      4dc:	ac 8b       	std	Y+20, r26	; 0x14
      4de:	bd 8b       	std	Y+21, r27	; 0x15
-		AFTER(CURRENT_OFFSET() + SEC(BRIDGE_TIME), self, updateBridgeAmount, -1);
+                                 // riktning.
+    AFTER(CURRENT_OFFSET() + SEC(BRIDGE_TIME), self, updateBridgeAmount,
      4e0:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      4e4:	66 5a       	subi	r22, 0xA6	; 166
      4e6:	7d 49       	sbci	r23, 0x9D	; 157
@@ -765,12 +804,13 @@ int bitParser(Controller *self, int arg) {
      502:	30 e0       	ldi	r19, 0x00	; 0
      504:	a9 01       	movw	r20, r18
      506:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	}
-	
-	if (data & SOUTH_ENTRY) {
+          -1); // Minska antal bilar på bron när den kört över. (Tidsbaserat).
+  }
+  // Om en bil kör in på bron från SOUTH.
+  if (data & SOUTH_ENTRY) {
      50a:	b3 fe       	sbrs	r11, 3
      50c:	36 c0       	rjmp	.+108    	; 0x57a <__stack+0x7b>
-		self->SouthQueue--;
+    self->SouthQueue--;          // Minska SouthQueue
      50e:	8a 85       	ldd	r24, Y+10	; 0x0a
      510:	9b 85       	ldd	r25, Y+11	; 0x0b
      512:	ac 85       	ldd	r26, Y+12	; 0x0c
@@ -782,7 +822,7 @@ int bitParser(Controller *self, int arg) {
      51e:	9b 87       	std	Y+11, r25	; 0x0b
      520:	ac 87       	std	Y+12, r26	; 0x0c
      522:	bd 87       	std	Y+13, r27	; 0x0d
-		self->BridgeAmount++;
+    self->BridgeAmount++;        // Öka bilar på bron.
      524:	8e 85       	ldd	r24, Y+14	; 0x0e
      526:	9f 85       	ldd	r25, Y+15	; 0x0f
      528:	a8 89       	ldd	r26, Y+16	; 0x10
@@ -794,7 +834,7 @@ int bitParser(Controller *self, int arg) {
      534:	9f 87       	std	Y+15, r25	; 0x0f
      536:	a8 8b       	std	Y+16, r26	; 0x10
      538:	b9 8b       	std	Y+17, r27	; 0x11
-		self->BridgePassedSameDir++;
+    self->BridgePassedSameDir++; // Öka hur många bilar som har åkt i samma
      53a:	8a 89       	ldd	r24, Y+18	; 0x12
      53c:	9b 89       	ldd	r25, Y+19	; 0x13
      53e:	ac 89       	ldd	r26, Y+20	; 0x14
@@ -806,7 +846,8 @@ int bitParser(Controller *self, int arg) {
      54a:	9b 8b       	std	Y+19, r25	; 0x13
      54c:	ac 8b       	std	Y+20, r26	; 0x14
      54e:	bd 8b       	std	Y+21, r27	; 0x15
-		AFTER(CURRENT_OFFSET() + SEC(BRIDGE_TIME), self,updateBridgeAmount, -1);
+                                 // riktning.
+    AFTER(CURRENT_OFFSET() + SEC(BRIDGE_TIME), self, updateBridgeAmount,
      550:	0e 94 90 10 	call	0x2120	; 0x2120 <CURRENT_OFFSET>
      554:	66 5a       	subi	r22, 0xA6	; 166
      556:	7d 49       	sbci	r23, 0x9D	; 157
@@ -826,9 +867,10 @@ int bitParser(Controller *self, int arg) {
      572:	30 e0       	ldi	r19, 0x00	; 0
      574:	a9 01       	movw	r20, r18
      576:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	}
+          -1); // Minska antal bilar på bron när den kört över. (Tidsbaserat).
+  }
 
-	return 0;
+  return 0;
 }
      57a:	80 e0       	ldi	r24, 0x00	; 0
      57c:	90 e0       	ldi	r25, 0x00	; 0
@@ -844,12 +886,12 @@ int bitParser(Controller *self, int arg) {
      590:	08 95       	ret
 
 00000592 <getNorthQueue>:
-	return 0;
+          0); // Kontrollera igen om ingen bil har kört in.
+  }
+  return 0;
 }
 
-int getNorthQueue(Controller *self, int arg) {
-	return self->NorthQueue;
-}
+int getNorthQueue(Controller *self, int arg) { return self->NorthQueue; }
      592:	fc 01       	movw	r30, r24
      594:	86 81       	ldd	r24, Z+6	; 0x06
      596:	97 81       	ldd	r25, Z+7	; 0x07
@@ -857,9 +899,7 @@ int getNorthQueue(Controller *self, int arg) {
 
 0000059a <getSouthQueue>:
 
-int getSouthQueue(Controller *self, int arg) {
-	return self->SouthQueue;
-}
+int getSouthQueue(Controller *self, int arg) { return self->SouthQueue; }
      59a:	fc 01       	movw	r30, r24
      59c:	82 85       	ldd	r24, Z+10	; 0x0a
      59e:	93 85       	ldd	r25, Z+11	; 0x0b
@@ -867,16 +907,15 @@ int getSouthQueue(Controller *self, int arg) {
 
 000005a2 <getBridgeAmount>:
 
-int getBridgeAmount(Controller *self, int arg) {
-	return self->BridgeAmount;
+int getBridgeAmount(Controller *self, int arg) { return self->BridgeAmount; }
      5a2:	fc 01       	movw	r30, r24
      5a4:	86 85       	ldd	r24, Z+14	; 0x0e
      5a6:	97 85       	ldd	r25, Z+15	; 0x0f
      5a8:	08 95       	ret
 
 000005aa <periodicUpdate>:
-	printAt(SYNC(self->controller, getSouthQueue, 0), 4);
-	return 0;
+  printAt(SYNC(self->controller, getSouthQueue, 0), 4);
+  return 0;
 }
 
 // periodicUpdate() uppdaterar displayen och callar sen after.
@@ -889,8 +928,8 @@ int periodicUpdate(GUI *self, int arg) {
      5b4:	1f 93       	push	r17
      5b6:	cf 93       	push	r28
      5b8:	df 93       	push	r29
-	// Uppdatera displayen direkt.
-	ASYNC(self, updateDisplay, 0);
+  // Uppdatera displayen direkt.
+  ASYNC(self, updateDisplay, 0);
      5ba:	c1 2c       	mov	r12, r1
      5bc:	d1 2c       	mov	r13, r1
      5be:	0f 2e       	mov	r0, r31
@@ -908,8 +947,8 @@ int periodicUpdate(GUI *self, int arg) {
      5d6:	cb 01       	movw	r24, r22
      5d8:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
 
-	// Calla after sen igen för att uppdatera displayen.
-	AFTER(MSEC(100), self, periodicUpdate, 0);
+  // Calla after sen igen för att uppdatera displayen.
+  AFTER(MSEC(100), self, periodicUpdate, 0);
      5dc:	0f 2e       	mov	r0, r31
      5de:	f5 ed       	ldi	r31, 0xD5	; 213
      5e0:	ef 2e       	mov	r14, r31
@@ -924,7 +963,7 @@ int periodicUpdate(GUI *self, int arg) {
      5f2:	80 e0       	ldi	r24, 0x00	; 0
      5f4:	90 e0       	ldi	r25, 0x00	; 0
      5f6:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	return 0;
+  return 0;
 }
      5fa:	80 e0       	ldi	r24, 0x00	; 0
      5fc:	90 e0       	ldi	r25, 0x00	; 0
@@ -941,26 +980,26 @@ int periodicUpdate(GUI *self, int arg) {
 00000610 <lcd_init>:
 // Starta LCD
 void lcd_init() {
-	// LCD Control Register A:
-	// Turn on LCD (LCDEN = 1)
-	// Low Power Waveform (LCDAB = 1)
-	LCDCRA = (1 << LCDEN) | (1 << LCDAB);
+  // LCD Control Register A:
+  // Turn on LCD (LCDEN = 1)
+  // Low Power Waveform (LCDAB = 1)
+  LCDCRA = (1 << LCDEN) | (1 << LCDAB);
      610:	80 ec       	ldi	r24, 0xC0	; 192
      612:	80 93 e4 00 	sts	0x00E4, r24	; 0x8000e4 <__TEXT_REGION_LENGTH__+0x7fc0e4>
-	// 1/3 Bias (LCD2B = 0)
-	// 1/4 Duty (LCDMUX1 & LCDMUX0 = 1)
-	// 25 Segments (LCDPM2 & LCDPM1 & LCDPM0 = 1)
-	// Prescaler N = 16 (LCDPS2 & LCDPS1 & LCDPS0 = 0)
-	// Clock Divide = 8 (LCDCD2 & LCDCD1 & LCDCD0 = 1
-	LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) |
+  // 1/3 Bias (LCD2B = 0)
+  // 1/4 Duty (LCDMUX1 & LCDMUX0 = 1)
+  // 25 Segments (LCDPM2 & LCDPM1 & LCDPM0 = 1)
+  // Prescaler N = 16 (LCDPS2 & LCDPS1 & LCDPS0 = 0)
+  // Clock Divide = 8 (LCDCD2 & LCDCD1 & LCDCD0 = 1
+  LCDCRB = (1 << LCDCS) | (1 << LCDMUX1) | (1 << LCDMUX0) | (1 << LCDPM2) |
      616:	87 eb       	ldi	r24, 0xB7	; 183
      618:	80 93 e5 00 	sts	0x00E5, r24	; 0x8000e5 <__TEXT_REGION_LENGTH__+0x7fc0e5>
-	(1 << LCDCD0);
 
-	// LCD Contrast Control Register:
-	// Drive Time = 300 µs (LCDDC2 & LCDDC1 & LCDDC0 = 0)
-	// Contrast Control Vol	tage = 3.35 V (LCDCC3 & LCDCC2 & LCDCC1 & LCDCC0 = 1)
-	LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
+  // LCD Contrast Control Register:
+  // Drive Time = 300 µs (LCDDC2 & LCDDC1 & LCDDC0 = 0)
+  // Contrast Control Vol	tage = 3.35 V (LCDCC3 & LCDCC2 & LCDCC1 & LCDCC0
+  // = 1)
+  LCDCCR = (1 << LCDCC3) | (1 << LCDCC2) | (1 << LCDCC1) | (1 << LCDCC0);
      61c:	8f e0       	ldi	r24, 0x0F	; 15
      61e:	80 93 e7 00 	sts	0x00E7, r24	; 0x8000e7 <__TEXT_REGION_LENGTH__+0x7fc0e7>
      622:	08 95       	ret
@@ -970,21 +1009,29 @@ void lcd_init() {
 
 // Karaktär (alltså 0-9) för positionen 0-5
 void writeChar(char ch, int pos) {
-	if (pos < 0 || pos > 5) return;                     // Checka att position är korrekt.
+  if (pos < 0 || pos > 5)
      624:	66 30       	cpi	r22, 0x06	; 6
      626:	71 05       	cpc	r23, r1
      628:	08 f0       	brcs	.+2      	; 0x62c <writeChar+0x8>
      62a:	6b c0       	rjmp	.+214    	; 0x702 <writeChar+0xde>
-	uint16_t segments = 0x0000;   // Default är tom.
-	if (ch >= '0' && ch <= '9') { // Checka om det är siffra
+    return;                     // Checka att position är korrekt.
+  uint16_t segments = 0x0000;   // Default är tom.
+  if (ch >= '0' && ch <= '9') { // Checka om det är siffra
      62c:	90 ed       	ldi	r25, 0xD0	; 208
      62e:	98 0f       	add	r25, r24
      630:	9a 30       	cpi	r25, 0x0A	; 10
      632:	50 f4       	brcc	.+20     	; 0x648 <writeChar+0x24>
-		segments = font[ch - '0'];	// Hämta font data för siffra array positionen, alltså t.ex
+    segments =
+        font[ch -
      634:	e8 2f       	mov	r30, r24
      636:	f0 e0       	ldi	r31, 0x00	; 0
      638:	f0 97       	sbiw	r30, 0x30	; 48
+void writeChar(char ch, int pos) {
+  if (pos < 0 || pos > 5)
+    return;                     // Checka att position är korrekt.
+  uint16_t segments = 0x0000;   // Default är tom.
+  if (ch >= '0' && ch <= '9') { // Checka om det är siffra
+    segments =
      63a:	ee 0f       	add	r30, r30
      63c:	ff 1f       	adc	r31, r31
      63e:	eb 5d       	subi	r30, 0xDB	; 219
@@ -992,28 +1039,40 @@ void writeChar(char ch, int pos) {
      642:	80 81       	ld	r24, Z
      644:	91 81       	ldd	r25, Z+1	; 0x01
      646:	02 c0       	rjmp	.+4      	; 0x64c <writeChar+0x28>
-}
 
 // Karaktär (alltså 0-9) för positionen 0-5
 void writeChar(char ch, int pos) {
-	if (pos < 0 || pos > 5) return;                     // Checka att position är korrekt.
-	uint16_t segments = 0x0000;   // Default är tom.
+  if (pos < 0 || pos > 5)
+    return;                     // Checka att position är korrekt.
+  uint16_t segments = 0x0000;   // Default är tom.
      648:	80 e0       	ldi	r24, 0x00	; 0
      64a:	90 e0       	ldi	r25, 0x00	; 0
-	if (ch >= '0' && ch <= '9') { // Checka om det är siffra
-		segments = font[ch - '0'];	// Hämta font data för siffra array positionen, alltså t.ex
-		// ASCII för 8 blir till: 56-48=8. Och font[8] = 0x1F51.
-	}
-	uint8_t *base = (uint8_t *)&LCDDR0 + pos / 2; // Beräkna basregistret för positionen. Displayen använder LCDDR0-LCDDR19. *base dereference pointer till minnesadressen av korrekt. Läs sida 8 av butterfly_lcd. De är i par. Så pos = 0,1 blir LCDDR0 Type cast också ifall det inte fungerar annars kan testa utan det fungerar säkert. Beräkna offset alltså low eller high nibble för registret om den är jämn eller ojämn. pos = 0,2,4 blir till 0 offset.
+             '0']; // Hämta font data för siffra array positionen, alltså t.ex
+                   // ASCII för 8 blir till: 56-48=8. Och font[8] = 0x1F51.
+  }
+  uint8_t *base =
+      (uint8_t *)&LCDDR0 +
+      pos / 2; // Beräkna basregistret för positionen. Displayen använder
      64c:	fb 01       	movw	r30, r22
      64e:	77 23       	and	r23, r23
      650:	0c f4       	brge	.+2      	; 0x654 <writeChar+0x30>
      652:	31 96       	adiw	r30, 0x01	; 1
      654:	f5 95       	asr	r31
      656:	e7 95       	ror	r30
+    segments =
+        font[ch -
+             '0']; // Hämta font data för siffra array positionen, alltså t.ex
+                   // ASCII för 8 blir till: 56-48=8. Och font[8] = 0x1F51.
+  }
+  uint8_t *base =
      658:	e4 51       	subi	r30, 0x14	; 20
      65a:	ff 4f       	sbci	r31, 0xFF	; 255
-	int offset = (pos % 2) * 4;
+               // av korrekt. Läs sida 8 av butterfly_lcd. De är i par. Så pos =
+               // 0,1 blir LCDDR0 Type cast också ifall det inte fungerar annars
+               // kan testa utan det fungerar säkert. Beräkna offset alltså low
+               // eller high nibble för registret om den är jämn eller ojämn.
+               // pos = 0,2,4 blir till 0 offset.
+  int offset = (pos % 2) * 4;
      65c:	61 70       	andi	r22, 0x01	; 1
      65e:	70 78       	andi	r23, 0x80	; 128
      660:	77 23       	and	r23, r23
@@ -1029,7 +1088,7 @@ void writeChar(char ch, int pos) {
      674:	66 0f       	add	r22, r22
      676:	77 1f       	adc	r23, r23
 
-	base[0] = (base[0] & ~(0xF << offset)) | ((segments & 0xF) << offset);			// Uppdatera nibble i första registret
+  base[0] = (base[0] & ~(0xF << offset)) |
      678:	30 81       	ld	r19, Z
      67a:	4f e0       	ldi	r20, 0x0F	; 15
      67c:	50 e0       	ldi	r21, 0x00	; 0
@@ -1041,6 +1100,7 @@ void writeChar(char ch, int pos) {
      688:	e2 f7       	brpl	.-8      	; 0x682 <writeChar+0x5e>
      68a:	24 2f       	mov	r18, r20
      68c:	20 95       	com	r18
+            ((segments & 0xF) << offset); // Uppdatera nibble i första registret
      68e:	ac 01       	movw	r20, r24
      690:	4f 70       	andi	r20, 0x0F	; 15
      692:	55 27       	eor	r21, r21
@@ -1050,11 +1110,19 @@ void writeChar(char ch, int pos) {
      69a:	55 1f       	adc	r21, r21
      69c:	0a 94       	dec	r0
      69e:	e2 f7       	brpl	.-8      	; 0x698 <writeChar+0x74>
+               // kan testa utan det fungerar säkert. Beräkna offset alltså low
+               // eller high nibble för registret om den är jämn eller ojämn.
+               // pos = 0,2,4 blir till 0 offset.
+  int offset = (pos % 2) * 4;
+
+  base[0] = (base[0] & ~(0xF << offset)) |
      6a0:	32 23       	and	r19, r18
      6a2:	43 2b       	or	r20, r19
      6a4:	40 83       	st	Z, r20
-	base[5] = (base[5] & ~(0xF << offset)) | (((segments >> 4) & 0xF) << offset);		// Uppdatera nibble i LCDDRx+5 registret, alltså pointer offset med base[5].
+            ((segments & 0xF) << offset); // Uppdatera nibble i första registret
+  base[5] = (base[5] & ~(0xF << offset)) |
      6a6:	35 81       	ldd	r19, Z+5	; 0x05
+            (((segments >> 4) & 0xF)
      6a8:	ac 01       	movw	r20, r24
      6aa:	52 95       	swap	r21
      6ac:	42 95       	swap	r20
@@ -1064,47 +1132,82 @@ void writeChar(char ch, int pos) {
      6b4:	45 27       	eor	r20, r21
      6b6:	4f 70       	andi	r20, 0x0F	; 15
      6b8:	55 27       	eor	r21, r21
+             << offset); // Uppdatera nibble i LCDDRx+5 registret, alltså
      6ba:	06 2e       	mov	r0, r22
      6bc:	02 c0       	rjmp	.+4      	; 0x6c2 <writeChar+0x9e>
      6be:	44 0f       	add	r20, r20
      6c0:	55 1f       	adc	r21, r21
      6c2:	0a 94       	dec	r0
      6c4:	e2 f7       	brpl	.-8      	; 0x6be <writeChar+0x9a>
+               // pos = 0,2,4 blir till 0 offset.
+  int offset = (pos % 2) * 4;
+
+  base[0] = (base[0] & ~(0xF << offset)) |
+            ((segments & 0xF) << offset); // Uppdatera nibble i första registret
+  base[5] = (base[5] & ~(0xF << offset)) |
      6c6:	32 23       	and	r19, r18
      6c8:	43 2b       	or	r20, r19
      6ca:	45 83       	std	Z+5, r20	; 0x05
-	base[10] = (base[10] & ~(0xF << offset)) | (((segments >> 8) & 0xF) << offset);	// Om offset 4 till exempel. 00001111 blir till 11110000, sedan 00001111, och bitwise AND vilket gör de 4 bits som har bestämts med offset till 0000.
+            (((segments >> 4) & 0xF)
+             << offset); // Uppdatera nibble i LCDDRx+5 registret, alltså
+                         // pointer offset med base[5].
+  base[10] =
+      (base[10] & ~(0xF << offset)) |
      6cc:	32 85       	ldd	r19, Z+10	; 0x0a
+      (((segments >> 8) & 0xF)
      6ce:	49 2f       	mov	r20, r25
      6d0:	55 27       	eor	r21, r21
      6d2:	4f 70       	andi	r20, 0x0F	; 15
      6d4:	55 27       	eor	r21, r21
+       << offset); // Om offset 4 till exempel. 00001111 blir till 11110000,
      6d6:	06 2e       	mov	r0, r22
      6d8:	02 c0       	rjmp	.+4      	; 0x6de <writeChar+0xba>
      6da:	44 0f       	add	r20, r20
      6dc:	55 1f       	adc	r21, r21
      6de:	0a 94       	dec	r0
      6e0:	e2 f7       	brpl	.-8      	; 0x6da <writeChar+0xb6>
+            ((segments & 0xF) << offset); // Uppdatera nibble i första registret
+  base[5] = (base[5] & ~(0xF << offset)) |
+            (((segments >> 4) & 0xF)
+             << offset); // Uppdatera nibble i LCDDRx+5 registret, alltså
+                         // pointer offset med base[5].
+  base[10] =
      6e2:	32 23       	and	r19, r18
      6e4:	43 2b       	or	r20, r19
      6e6:	42 87       	std	Z+10, r20	; 0x0a
-	base[15] = (base[15] & ~(0xF << offset)) | (((segments >> 12) & 0xF) << offset);	// Sedan segments & 0xF blir 000000000000xxxx, AND med segments ger bara värdet för dessa 4 bits. Samma fast för offset för de andra raderna. Alltså om vi har aaaabbbbccccdddd, så ger varje rad, dddd,cccc,bbbb,aaaa. Sedan << offset för att flytta vänster om det behövs. Sedan | OR för att kombinera med hälften tom och hälften redan fylld. Alltså 0000xxxx om ingen offset, eller xxxx0000 om offset.
+      (base[10] & ~(0xF << offset)) |
+      (((segments >> 8) & 0xF)
+       << offset); // Om offset 4 till exempel. 00001111 blir till 11110000,
+                   // sedan 00001111, och bitwise AND vilket gör de 4 bits som
+                   // har bestämts med offset till 0000.
+  base[15] = (base[15] & ~(0xF << offset)) |
      6e8:	37 85       	ldd	r19, Z+15	; 0x0f
+             (((segments >> 12) & 0xF)
      6ea:	89 2f       	mov	r24, r25
      6ec:	99 27       	eor	r25, r25
      6ee:	82 95       	swap	r24
      6f0:	8f 70       	andi	r24, 0x0F	; 15
+              << offset); // Sedan segments & 0xF blir 000000000000xxxx, AND med
      6f2:	02 c0       	rjmp	.+4      	; 0x6f8 <writeChar+0xd4>
      6f4:	88 0f       	add	r24, r24
      6f6:	99 1f       	adc	r25, r25
      6f8:	6a 95       	dec	r22
      6fa:	e2 f7       	brpl	.-8      	; 0x6f4 <writeChar+0xd0>
+      (base[10] & ~(0xF << offset)) |
+      (((segments >> 8) & 0xF)
+       << offset); // Om offset 4 till exempel. 00001111 blir till 11110000,
+                   // sedan 00001111, och bitwise AND vilket gör de 4 bits som
+                   // har bestämts med offset till 0000.
+  base[15] = (base[15] & ~(0xF << offset)) |
      6fc:	23 23       	and	r18, r19
      6fe:	82 2b       	or	r24, r18
      700:	87 87       	std	Z+15, r24	; 0x0f
      702:	08 95       	ret
 
 00000704 <printAt>:
+                          // vänster om det behövs. Sedan | OR för att kombinera
+                          // med hälften tom och hälften redan fylld. Alltså
+                          // 0000xxxx om ingen offset, eller xxxx0000 om offset.
 }
 
 void printAt(long num, int pos) {
@@ -1121,8 +1224,8 @@ void printAt(long num, int pos) {
      718:	4b 01       	movw	r8, r22
      71a:	5c 01       	movw	r10, r24
      71c:	ea 01       	movw	r28, r20
-	int pp = pos;
-	writeChar( (num % 100) / 10 + '0', pp);
+  int pp = pos;
+  writeChar((num % 100) / 10 + '0', pp);
      71e:	24 e6       	ldi	r18, 0x64	; 100
      720:	30 e0       	ldi	r19, 0x00	; 0
      722:	40 e0       	ldi	r20, 0x00	; 0
@@ -1142,9 +1245,9 @@ void printAt(long num, int pos) {
      742:	80 e3       	ldi	r24, 0x30	; 48
      744:	82 0f       	add	r24, r18
      746:	0e 94 12 03 	call	0x624	; 0x624 <writeChar>
-	pp++;
+  pp++;
      74a:	21 96       	adiw	r28, 0x01	; 1
-	writeChar( num % 10 + '0', pp);
+  writeChar(num % 10 + '0', pp);
      74c:	c5 01       	movw	r24, r10
      74e:	b4 01       	movw	r22, r8
      750:	a7 01       	movw	r20, r14
@@ -1169,12 +1272,13 @@ void printAt(long num, int pos) {
 
 00000778 <updateDisplay>:
 
-// updateDisplay() Hämtar värden för NorthQueue, BridgeAmount, SouthQueue och skriver på LCD
+// updateDisplay() Hämtar värden för NorthQueue, BridgeAmount, SouthQueue och
+// skriver på LCD
 int updateDisplay(GUI *self, int arg) {
      778:	cf 93       	push	r28
      77a:	df 93       	push	r29
      77c:	ec 01       	movw	r28, r24
-	printAt(SYNC(self->controller, getNorthQueue, 0), 0);
+  printAt(SYNC(self->controller, getNorthQueue, 0), 0);
      77e:	40 e0       	ldi	r20, 0x00	; 0
      780:	50 e0       	ldi	r21, 0x00	; 0
      782:	69 ec       	ldi	r22, 0xC9	; 201
@@ -1189,7 +1293,7 @@ int updateDisplay(GUI *self, int arg) {
      796:	40 e0       	ldi	r20, 0x00	; 0
      798:	50 e0       	ldi	r21, 0x00	; 0
      79a:	0e 94 82 03 	call	0x704	; 0x704 <printAt>
-	printAt(SYNC(self->controller, getBridgeAmount, 0), 2);
+  printAt(SYNC(self->controller, getBridgeAmount, 0), 2);
      79e:	40 e0       	ldi	r20, 0x00	; 0
      7a0:	50 e0       	ldi	r21, 0x00	; 0
      7a2:	61 ed       	ldi	r22, 0xD1	; 209
@@ -1204,7 +1308,7 @@ int updateDisplay(GUI *self, int arg) {
      7b6:	42 e0       	ldi	r20, 0x02	; 2
      7b8:	50 e0       	ldi	r21, 0x00	; 0
      7ba:	0e 94 82 03 	call	0x704	; 0x704 <printAt>
-	printAt(SYNC(self->controller, getSouthQueue, 0), 4);
+  printAt(SYNC(self->controller, getSouthQueue, 0), 4);
      7be:	40 e0       	ldi	r20, 0x00	; 0
      7c0:	50 e0       	ldi	r21, 0x00	; 0
      7c2:	6d ec       	ldi	r22, 0xCD	; 205
@@ -1219,7 +1323,7 @@ int updateDisplay(GUI *self, int arg) {
      7d6:	44 e0       	ldi	r20, 0x04	; 4
      7d8:	50 e0       	ldi	r21, 0x00	; 0
      7da:	0e 94 82 03 	call	0x704	; 0x704 <printAt>
-	return 0;
+  return 0;
 }
      7de:	80 e0       	ldi	r24, 0x00	; 0
      7e0:	90 e0       	ldi	r25, 0x00	; 0
@@ -1243,7 +1347,7 @@ int startProgram(GUI *self, int arg) {
      7f4:	cf 93       	push	r28
      7f6:	df 93       	push	r29
      7f8:	ec 01       	movw	r28, r24
-	ASYNC(self, updateDisplay, 0);
+  ASYNC(self, updateDisplay, 0);
      7fa:	c1 2c       	mov	r12, r1
      7fc:	d1 2c       	mov	r13, r1
      7fe:	0f 2e       	mov	r0, r31
@@ -1260,7 +1364,7 @@ int startProgram(GUI *self, int arg) {
      814:	70 e0       	ldi	r23, 0x00	; 0
      816:	cb 01       	movw	r24, r22
      818:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	ASYNC(self, periodicUpdate, 0);
+  ASYNC(self, periodicUpdate, 0);
      81c:	0f 2e       	mov	r0, r31
      81e:	f5 ed       	ldi	r31, 0xD5	; 213
      820:	ef 2e       	mov	r14, r31
@@ -1274,7 +1378,7 @@ int startProgram(GUI *self, int arg) {
      830:	70 e0       	ldi	r23, 0x00	; 0
      832:	cb 01       	movw	r24, r22
      834:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	ASYNC(self->controller, idleState, 0);
+  ASYNC(self->controller, idleState, 0);
      838:	0c 81       	ldd	r16, Y+4	; 0x04
      83a:	1d 81       	ldd	r17, Y+5	; 0x05
      83c:	0f 2e       	mov	r0, r31
@@ -1290,7 +1394,7 @@ int startProgram(GUI *self, int arg) {
      850:	70 e0       	ldi	r23, 0x00	; 0
      852:	cb 01       	movw	r24, r22
      854:	0e 94 ad 0e 	call	0x1d5a	; 0x1d5a <async>
-	return 0;
+  return 0;
 }
      858:	80 e0       	ldi	r24, 0x00	; 0
      85a:	90 e0       	ldi	r25, 0x00	; 0
@@ -1307,13 +1411,13 @@ int startProgram(GUI *self, int arg) {
 0000086e <main>:
 
 int main() {
-	
-	avr_init();
+
+  avr_init();
      86e:	0e 94 4d 00 	call	0x9a	; 0x9a <avr_init>
-	lcd_init();
+  lcd_init();
      872:	0e 94 08 03 	call	0x610	; 0x610 <lcd_init>
 
-	INSTALL(&controller, bitParser, IRQ_USART0_RX);
+  INSTALL(&controller, bitParser, IRQ_USART0_RX);
      876:	48 e0       	ldi	r20, 0x08	; 8
      878:	60 e2       	ldi	r22, 0x20	; 32
      87a:	72 e0       	ldi	r23, 0x02	; 2
@@ -1321,7 +1425,7 @@ int main() {
      87e:	91 e0       	ldi	r25, 0x01	; 1
      880:	0e 94 e7 10 	call	0x21ce	; 0x21ce <install>
 
-	return TINYTIMBER(&gui, startProgram, 0);
+  return TINYTIMBER(&gui, startProgram, 0);
      884:	40 e0       	ldi	r20, 0x00	; 0
      886:	50 e0       	ldi	r21, 0x00	; 0
      888:	64 ef       	ldi	r22, 0xF4	; 244
@@ -1329,7 +1433,6 @@ int main() {
      88c:	80 e0       	ldi	r24, 0x00	; 0
      88e:	91 e0       	ldi	r25, 0x01	; 1
      890:	0e 94 02 11 	call	0x2204	; 0x2204 <tinytimber>
-
 }
      894:	08 95       	ret
 
@@ -1337,16 +1440,16 @@ int main() {
 #include "serialCom.h"
 
 int USARTtransmit(SerialCom *self, int arg) {
-	// Vänta tills send buffern är tom
-	while (!(UCSR0A & (1 << UDRE0))) {
+  // Vänta tills send buffern är tom
+  while (!(UCSR0A & (1 << UDRE0))) {
      896:	80 91 c0 00 	lds	r24, 0x00C0	; 0x8000c0 <__TEXT_REGION_LENGTH__+0x7fc0c0>
      89a:	85 ff       	sbrs	r24, 5
      89c:	fc cf       	rjmp	.-8      	; 0x896 <USARTtransmit>
-	}
-	// Skriv byten till UDR0 för sändning
-	UDR0 = (uint8_t) arg;
+  }
+  // Skriv byten till UDR0 för sändning
+  UDR0 = (uint8_t)arg;
      89e:	60 93 c6 00 	sts	0x00C6, r22	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7fc0c6>
-	return 0;
+  return 0;
 }
      8a2:	80 e0       	ldi	r24, 0x00	; 0
      8a4:	90 e0       	ldi	r25, 0x00	; 0
@@ -1355,15 +1458,16 @@ int USARTtransmit(SerialCom *self, int arg) {
 000008a8 <USARTreceive>:
 
 int USARTreceive(SerialCom *self, int arg) {
-	// Vänta tills data finns att läsa
-	while (!(UCSR0A & (1 << RXC0))) {}
+  // Vänta tills data finns att läsa
+  while (!(UCSR0A & (1 << RXC0))) {
      8a8:	80 91 c0 00 	lds	r24, 0x00C0	; 0x8000c0 <__TEXT_REGION_LENGTH__+0x7fc0c0>
      8ac:	88 23       	and	r24, r24
      8ae:	e4 f7       	brge	.-8      	; 0x8a8 <USARTreceive>
-	
-	int bits = UDR0;
+  }
+
+  int bits = UDR0;
      8b0:	80 91 c6 00 	lds	r24, 0x00C6	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7fc0c6>
-	return bits;
+  return bits;
 }
      8b4:	90 e0       	ldi	r25, 0x00	; 0
      8b6:	08 95       	ret

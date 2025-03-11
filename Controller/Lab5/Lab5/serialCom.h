@@ -5,10 +5,10 @@
 #include <avr/io.h>
 
 typedef struct {
-	Object super;
+  Object super;
 } SerialCom;
 
-#define initSerialCom() { initObject() }
+#define initSerialCom() {initObject()}
 
 int USARTtransmit(SerialCom *self, int arg);
 int USARTreceive(SerialCom *self, int arg);

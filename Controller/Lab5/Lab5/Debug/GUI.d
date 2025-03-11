@@ -1,4 +1,4 @@
-GUI.d GUI.o: .././GUI.c .././GUI.h .././TinyTimber.h .././Controller.h \
+GUI.d GUI.o: .././GUI.c .././GUI.h .././Controller.h .././TinyTimber.h \
  .././serialCom.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
@@ -15,9 +15,9 @@ GUI.d GUI.o: .././GUI.c .././GUI.h .././TinyTimber.h .././Controller.h \
 
 .././GUI.h:
 
-.././TinyTimber.h:
-
 .././Controller.h:
+
+.././TinyTimber.h:
 
 .././serialCom.h:
 
