@@ -18,14 +18,12 @@
 
 #define IDLE_DELAY_MSEC 500 // Tiden för idle att loopa.
 
-#define GREEN_LIGHT_TIME_MSEC                                                  \
-  500 // Låt grönt ljus vara på en liten stund så att man faktiskt ser den
-// ändras.
+#define GREEN_LIGHT_TIME_MSEC 500 
+// Låt grönt ljus vara på en liten stund så att man faktiskt ser den ändras.
 
 #define MAX_PASS_SAME_SIDE 10 // Starvation gräns.
 
-#define TIME_QUEUE                                                             \
-  1 // Tiden det tar för bilar att queuea på bron efter varandra.
+#define TIME_QUEUE 1 // Tiden det tar för bilar att queuea på bron efter varandra.
 #define BRIDGE_TIME 5 // Tiden det tar för bilar att åka över bron.
 
 struct GUI; // Forward declaration
@@ -43,8 +41,7 @@ typedef struct {
   // southbound den sista på bridge.
 } Controller;
 
-#define initController(serialCom, gui)                                         \
-  {initObject(), serialCom, gui, 0, 0, 0, 0, 0}
+#define initController(serialCom, gui) {initObject(), serialCom, gui, 0, 0, 0, 0, 0}
 
 int bitParser(Controller *self, int arg);
 int removeFromBridge(Controller *self, int arg);
