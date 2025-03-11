@@ -692,15 +692,15 @@ END GROUP
  .debug_abbrev  0x00000bf1       0xca serialCom.o
  .debug_abbrev  0x00000cbb      0x398 TinyTimber.o
 
-.debug_line     0x00000000     0x160c
+.debug_line     0x00000000     0x161a
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x122 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega169p/avr5/crtatmega169p.o
  .debug_line    0x00000122       0xd9 avr_init.o
- .debug_line    0x000001fb      0x2eb Controller.o
- .debug_line    0x000004e6      0x1b1 GUI.o
- .debug_line    0x00000697       0xd7 main.o
- .debug_line    0x0000076e       0xf9 serialCom.o
- .debug_line    0x00000867      0xda5 TinyTimber.o
+ .debug_line    0x000001fb      0x2fb Controller.o
+ .debug_line    0x000004f6      0x1b1 GUI.o
+ .debug_line    0x000006a7       0xd5 main.o
+ .debug_line    0x0000077c       0xf9 serialCom.o
+ .debug_line    0x00000875      0xda5 TinyTimber.o
 
 .debug_frame    0x00000000      0xcf0
  *(.debug_frame)

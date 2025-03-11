@@ -70,18 +70,6 @@ int idleState(Controller *self, int arg) {
   return 0;
 }
 
-// Väntar tills bron är tom innan en ny bil kan skickas.
-int waitForBridgeClearance(Controller *self, int arg) {
-  if (self->BridgeAmount == 0) { // Om bron är tom, gå till idle.
-    ASYNC(self, idleState, 0);
-  } else {
-    AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance,
-          0); // Kontrollera igen senare. Den callar sig själv, om inte har så
-              // kommer den drifta eftersom AFTER tiden ökar.
-  }
-  return 0;
-}
-
 // dispatchNextCar avgör om nästa bil kan skickas ut på bron.
 int dispatchNextCar(Controller *self, int arg) {
   int *currentQueue =
@@ -99,6 +87,20 @@ int dispatchNextCar(Controller *self, int arg) {
   ASYNC(self, signalGreenLight, 0);
   return 0;
 }
+
+// Väntar tills bron är tom innan en ny bil kan skickas.
+int waitForBridgeClearance(Controller *self, int arg) {
+  if (self->BridgeAmount == 0) { // Om bron är tom, gå till idle.
+    ASYNC(self, idleState, 0);
+  } else {
+    AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance,
+          0); // Kontrollera igen senare. Den callar sig själv, om inte har så
+              // kommer den drifta eftersom AFTER tiden ökar.
+  }
+  return 0;
+}
+
+
 
 // signalGreenLight tänder ljuset åt rätt riktning.
 int signalGreenLight(Controller *self, int arg) {
