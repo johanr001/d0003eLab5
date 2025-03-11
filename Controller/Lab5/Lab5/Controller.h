@@ -1,9 +1,9 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "GUI.h"
 #include "TinyTimber.h"
 #include "serialCom.h"
-#include "GUI.h"
 #include <stdbool.h>
 
 #define NORTH_ARRIVAL 0b00000001
@@ -19,21 +19,21 @@
 #define IDLE_DELAY_MSEC 500 // Tiden för idle att loopa.
 
 #define GREEN_LIGHT_TIME_MSEC                                                  \
-500 // Låt grönt ljus vara på en liten stund så att man faktiskt ser den
+  500 // Låt grönt ljus vara på en liten stund så att man faktiskt ser den
 // ändras.
 
 #define MAX_PASS_SAME_SIDE 10 // Starvation gräns.
 
 #define TIME_QUEUE                                                             \
-1 // Tiden det tar för bilar att queuea på bron efter varandra.
+  1 // Tiden det tar för bilar att queuea på bron efter varandra.
 #define BRIDGE_TIME 5 // Tiden det tar för bilar att åka över bron.
 
 struct GUI; // Forward declaration
 
 typedef struct {
-	Object super;
-	SerialCom *serialCom;
-    struct GUI *gui; // Använd forward declared struct, då kan man passa pointer.
+  Object super;
+  SerialCom *serialCom;
+  struct GUI *gui; // Använd forward declared struct, då kan man passa pointer.
   unsigned long NorthQueue;   // Antalet bilar som finns i NorthBound kön.
   unsigned long SouthQueue;   // Antalet bilar som finns i SouthBound kön.
   unsigned long BridgeAmount; // Antalet bilar på bron just nu.
@@ -41,9 +41,10 @@ typedef struct {
   // passerat bridge, för starvation.
   bool lastBridgeDir; // Om 1 var northbound den bridge arrival, om 0 var
   // southbound den sista på bridge.
-  } Controller;
+} Controller;
 
-#define initController(serialCom, gui) {initObject(), serialCom, gui, 0, 0, 0, 0, 0}
+#define initController(serialCom, gui)                                         \
+  {initObject(), serialCom, gui, 0, 0, 0, 0, 0}
 
 int bitParser(Controller *self, int arg);
 int removeFromBridge(Controller *self, int arg);

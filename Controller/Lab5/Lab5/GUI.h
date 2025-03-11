@@ -8,8 +8,9 @@
 struct Controller; // Forward declaration
 
 typedef struct {
-	Object super;
-    struct Controller *controller; // Använd forward declared struct, då kan man passa pointer.
+  Object super;
+  struct Controller
+      *controller; // Använd forward declared struct, då kan man passa pointer.
 } GUI;
 
 #define initGUI(controller) {initObject(), controller}
