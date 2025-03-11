@@ -21,8 +21,8 @@ int bitParser(Controller *self, int arg) {
     self->BridgePassedSameDir++; // Öka hur många bilar som har åkt i samma
                                  // riktning.
     ASYNC(self->gui, updateDisplay, 0);
-    AFTER(SEC(BRIDGE_TIME), self, removeFromBridge,
-          0); // Minska antal bilar på bron när den kört över. (Tidsbaserat).
+    AFTER(SEC(BRIDGE_TIME), self, removeFromBridge, 0);
+    // Minska antal bilar på bron när den kört över. (Tidsbaserat).
   }
   // Om en bil kör in på bron från SOUTH.
   if (sensor & SOUTH_ENTRY) {
@@ -31,8 +31,8 @@ int bitParser(Controller *self, int arg) {
     self->BridgePassedSameDir++; // Öka hur många bilar som har åkt i samma
                                  // riktning.
     ASYNC(self->gui, updateDisplay, 0);
-    AFTER(SEC(BRIDGE_TIME), self, removeFromBridge,
-          0); // Minska antal bilar på bron när den kört över. (Tidsbaserat).
+    AFTER(SEC(BRIDGE_TIME), self, removeFromBridge, 0);
+    // Minska antal bilar på bron när den kört över. (Tidsbaserat).
   }
 
   return 0;
@@ -50,9 +50,9 @@ int removeFromBridge(Controller *self, int arg) {
 int idleState(Controller *self, int arg) {
   self->BridgePassedSameDir = 0; // Nollställ.
   // Bestämmer vilken queue som ska prioriteras baserat på lastBridgeDir.
-  int *priorityQueue =
+  unsigned long *priorityQueue =
       self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
-  int *secondaryQueue =
+  unsigned long *secondaryQueue =
       self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
   // Om den prioriterade queuen har bilar, ändra riktning och skicka nästa bil.
   if (*priorityQueue > 0) {
@@ -72,9 +72,9 @@ int idleState(Controller *self, int arg) {
 
 // dispatchNextCar avgör om nästa bil kan skickas ut på bron.
 int dispatchNextCar(Controller *self, int arg) {
-  int *currentQueue =
+  unsigned long *currentQueue =
       self->lastBridgeDir ? &self->NorthQueue : &self->SouthQueue;
-  int *oppositeQueue =
+  unsigned long *oppositeQueue =
       self->lastBridgeDir ? &self->SouthQueue : &self->NorthQueue;
   // Om kön är tom eller för många bilar passerat i samma riktning, vänta på att
   // bron blir tom.
@@ -93,14 +93,12 @@ int waitForBridgeClearance(Controller *self, int arg) {
   if (self->BridgeAmount == 0) { // Om bron är tom, gå till idle.
     ASYNC(self, idleState, 0);
   } else {
-    AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance,
-          0); // Kontrollera igen senare. Den callar sig själv, om inte har
-              // CURRENT_OFFSET kommer den drifta eftersom AFTER tiden ökar
+    AFTER(CURRENT_OFFSET(), self, waitForBridgeClearance, 0);
+    // Kontrollera igen senare. Den callar sig själv, om inte har
+    // CURRENT_OFFSET kommer den drifta eftersom AFTER tiden ökar
   }
   return 0;
 }
-
-
 
 // signalGreenLight tänder ljuset åt rätt riktning.
 int signalGreenLight(Controller *self, int arg) {
@@ -116,14 +114,14 @@ int signalGreenLight(Controller *self, int arg) {
 int monitorCarEntry(Controller *self, int arg) {
   if (self->BridgeAmount > 0) { // Om en bil har kört in på bron.
     int bits = self->lastBridgeDir ? NORTH_RED : SOUTH_RED;
-    ASYNC(self->serialCom, USARTtransmit,
-          bits); // Tänd rött ljus för att stoppa nästa bil.
-    AFTER(CURRENT_OFFSET() + SEC(TIME_QUEUE), self, dispatchNextCar,
-          0); // Vänta innan nästa bil skickas. Ha CURRENT_OFFSET() så det
-              // alltid är tiden från dess monitorCarEntry's call.
+    ASYNC(self->serialCom, USARTtransmit, bits);
+    // Tänd rött ljus för att stoppa nästa bil.
+    AFTER(CURRENT_OFFSET() + SEC(TIME_QUEUE), self, dispatchNextCar, 0);
+    // Vänta innan nästa bil skickas. Ha CURRENT_OFFSET() så det
+    // alltid är tiden från dess monitorCarEntry's call.
   } else {
-    ASYNC(self, monitorCarEntry,
-          0); // Kontrollera igen om ingen bil har kört in.
+    ASYNC(self, monitorCarEntry, 0);
+    // Kontrollera igen om ingen bil har kört in.
   }
   return 0;
 }
